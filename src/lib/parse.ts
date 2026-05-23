@@ -11,38 +11,28 @@ export async function parseArticleHrefs(html: string): Promise<string[]> {
   return hrefs;
 }
 
-/** `?plugin=attach&pcmd=list` のHTMLから添付ファイルダウンロードリンク一覧を取得する。 */
-export async function parseAttachmentOpenHrefs(html: string): Promise<string[]> {
-  const hrefs: string[] = [];
-  const rewriter = new HTMLRewriter().on(
-    "div#contents > div#body > ul > li > ul li > a",
-    {
-      element(el) {
-        const href = el.getAttribute("href");
-        if (href && href.includes("pcmd=open")) {
-          hrefs.push(href);
-        }
-      },
-    },
-  );
-  await rewriter.transform(new Response(html)).arrayBuffer();
-  return hrefs;
-}
+/** `?plugin=attach&pcmd=list` のHTMLから添付ファイル href 一覧を取得する。 */
+export async function parseAttachmentHrefs(
+  html: string,
+): Promise<[string[], string[]]> {
+  const openHrefs: string[] = [];
+  const infoHrefs: string[] = [];
 
-/** `?plugin=attach&pcmd=list` のHTMLから添付ファイル詳細ページリンク一覧を取得する。 */
-export async function parseAttachmentInfoHrefs(html: string): Promise<string[]> {
-  const hrefs: string[] = [];
   const rewriter = new HTMLRewriter().on(
     "div#contents > div#body > ul > li > ul li > a",
     {
       element(el) {
         const href = el.getAttribute("href");
-        if (href && href.includes("pcmd=info")) {
-          hrefs.push(href);
+        if (!href) return;
+
+        if (href.includes("pcmd=open")) {
+          openHrefs.push(href);
+        } else if (href.includes("pcmd=info")) {
+          infoHrefs.push(href);
         }
       },
     },
   );
   await rewriter.transform(new Response(html)).arrayBuffer();
-  return hrefs;
+  return [openHrefs, infoHrefs];
 }

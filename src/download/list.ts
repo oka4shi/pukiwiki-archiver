@@ -1,7 +1,11 @@
 import { configs, OUTPUT_DIR } from "../config";
 import { createFetcher } from "../lib/fetch";
 import { createDownloader } from "../lib/downloader";
-import { parseArticleHrefs, parseAttachmentHrefs } from "../lib/parse";
+import {
+  parseArticleHrefs,
+  parseAttachmentOpenHrefs,
+  parseAttachmentInfoHrefs,
+} from "../lib/parse";
 
 type Fetcher = ReturnType<typeof createFetcher>;
 
@@ -29,15 +33,20 @@ export async function downloadListPages(
     "?plugin=attach&pcmd=list",
     "attachlist.html",
   );
-  const [attachmentOpenHrefs, attachmentInfoHrefs] = attachlistHtml
-    ? await parseAttachmentHrefs(attachlistHtml)
-    : [[], []];
+  const attachmentOpenHrefs = attachlistHtml
+    ? await parseAttachmentOpenHrefs(attachlistHtml)
+    : [];
+  const attachmentInfoHrefs = attachlistHtml
+    ? await parseAttachmentInfoHrefs(attachlistHtml)
+    : [];
 
   await dl.saveHtml("?RecentChanges", "RecentChanges/index.html");
 
   console.log(`\n  → 記事: ${String(articleHrefs.length)} 件`);
   console.log(`  → 添付ファイル: ${String(attachmentOpenHrefs.length)} 件`);
-  console.log(`  → 添付ファイルの詳細ページ: ${String(attachmentInfoHrefs.length)} 件`);
+  console.log(
+    `  → 添付ファイルの詳細ページ: ${String(attachmentInfoHrefs.length)} 件`,
+  );
 
   return { articleHrefs, attachmentOpenHrefs, attachmentInfoHrefs };
 }

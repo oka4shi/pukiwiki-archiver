@@ -72,12 +72,16 @@ describe("articleHrefToPageName", () => {
 
   it("複数のスペース（+ でエンコード）を正しくデコードして返す", () => {
     // "Hello World Test" というページ名は href では ./?Hello+World+Test になる
-    expect(articleHrefToPageName("./?Hello+World+Test")).toBe("Hello World Test");
+    expect(articleHrefToPageName("./?Hello+World+Test")).toBe(
+      "Hello World Test",
+    );
   });
 
   it("スペースとプラス記号が混在するページ名を区別する", () => {
     // "Hello World+Test" というページ名は href では ./?Hello+World%2BTest になる
-    expect(articleHrefToPageName("./?Hello+World%2BTest")).toBe("Hello World+Test");
+    expect(articleHrefToPageName("./?Hello+World%2BTest")).toBe(
+      "Hello World+Test",
+    );
   });
 });
 

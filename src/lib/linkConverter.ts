@@ -77,19 +77,15 @@ class LinkRewriter {
 }
 
 /**
- * HTMLの内容を処理して、リンクを変換する
- * @param html - HTMLの内容
- * @param filePath - このHTMLファイルのパス（baseDir からの相対パス）
+ * HTMLファイルのリンクを変換してそのまま上書き
+ * @param filePath - HTMLファイルのフルパス
  * @param baseDir - アーカイブのルートディレクトリ（絶対パス）
- * @returns 変換後のHTML
  */
-export async function convertLinksInHtml(
-  html: string,
+export async function convertLinksInFile(
   filePath: string,
   baseDir: string,
-): Promise<string> {
-  const absoluteFilePath = path.join(baseDir, filePath);
-  const rewriter = new LinkRewriter(absoluteFilePath, baseDir);
+): Promise<void> {
+  const rewriter = new LinkRewriter(filePath, baseDir);
 
   const rewriterStream = new HTMLRewriter();
   // a タグと img, script などの要素を処理
@@ -100,7 +96,8 @@ export async function convertLinksInHtml(
     .on("link", rewriter)
     .on("source", rewriter);
 
-  const response = new Response(html);
+  const file = Bun.file(filePath);
+  const response = new Response(file);
   const transformed = rewriterStream.transform(response);
-  return transformed.text();
+  await Bun.write(filePath, transformed);
 }

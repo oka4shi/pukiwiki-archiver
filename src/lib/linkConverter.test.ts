@@ -1,5 +1,8 @@
-import { describe, expect, it } from "bun:test";
-import { resolveHref, convertLinksInHtml } from "./linkConverter.ts";
+import { describe, expect, it, beforeEach, afterEach } from "bun:test";
+import * as fs from "fs";
+import * as path from "path";
+import * as os from "os";
+import { resolveHref, convertLinksInFile } from "./linkConverter.ts";
 
 describe("linkConverter", () => {
   describe("resolveHref", () => {
@@ -50,52 +53,87 @@ describe("linkConverter", () => {
     it("should not modify links outside base directory", () => {
       const href = "../../../outside/file.html";
       const result = resolveHref(href, currentFilePath, baseDir);
-      // 外のディレクトリへのリンクは変換されない
       expect(result).toBe("../../../outside/file.html");
     });
   });
 
-  describe("convertLinksInHtml", () => {
-    const baseDir = "/tmp/archive";
+  describe("convertLinksInFile", () => {
+    let tempDir: string;
+
+    beforeEach(() => {
+      tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "convert-test-"));
+    });
+
+    afterEach(() => {
+      if (fs.existsSync(tempDir)) {
+        fs.rmSync(tempDir, { recursive: true });
+      }
+    });
 
     it("should convert href attributes in anchor tags", async () => {
+      const htmlPath = path.join(tempDir, "test.html");
       const html = '<a href="edit.html">Edit</a>';
-      const filePath = "articles/Test/index.html";
-      const result = await convertLinksInHtml(html, filePath, baseDir);
+      fs.writeFileSync(htmlPath, html, "utf-8");
+
+      await convertLinksInFile(htmlPath, tempDir);
+
+      const result = fs.readFileSync(htmlPath, "utf-8");
       expect(result).toContain('href="edit.html"');
     });
 
     it("should convert src attributes in img tags", async () => {
+      const articlesDir = path.join(tempDir, "articles", "Test");
+      fs.mkdirSync(articlesDir, { recursive: true });
+
       const html =
         '<img src="../../attachments/Test/_attachments/0/image.jpg" />';
-      const filePath = "articles/Test/index.html";
-      const result = await convertLinksInHtml(html, filePath, baseDir);
+      const htmlFullPath = path.join(articlesDir, "index.html");
+      fs.writeFileSync(htmlFullPath, html, "utf-8");
+
+      await convertLinksInFile(htmlFullPath, tempDir);
+
+      const result = fs.readFileSync(htmlFullPath, "utf-8");
       expect(result).toContain("src=");
       expect(result).toContain("image.jpg");
     });
 
     it("should preserve external URLs", async () => {
+      const htmlPath = path.join(tempDir, "test.html");
       const html = '<a href="https://example.com">External</a>';
-      const filePath = "list.html";
-      const result = await convertLinksInHtml(html, filePath, baseDir);
+      fs.writeFileSync(htmlPath, html, "utf-8");
+
+      await convertLinksInFile(htmlPath, tempDir);
+
+      const result = fs.readFileSync(htmlPath, "utf-8");
       expect(result).toContain("https://example.com");
     });
 
     it("should preserve anchor links", async () => {
+      const htmlPath = path.join(tempDir, "test.html");
       const html = '<a href="#section">Section</a>';
-      const filePath = "list.html";
-      const result = await convertLinksInHtml(html, filePath, baseDir);
+      fs.writeFileSync(htmlPath, html, "utf-8");
+
+      await convertLinksInFile(htmlPath, tempDir);
+
+      const result = fs.readFileSync(htmlPath, "utf-8");
       expect(result).toContain("#section");
     });
 
     it("should handle multiple links in the same document", async () => {
+      const articlesDir = path.join(tempDir, "articles", "Test");
+      fs.mkdirSync(articlesDir, { recursive: true });
+
       const html = `
         <a href="edit.html">Edit</a>
         <a href="diff.html">Diff</a>
         <img src="../../attachments/Test/_attachments/0/image.jpg" />
       `;
-      const filePath = "articles/Test/index.html";
-      const result = await convertLinksInHtml(html, filePath, baseDir);
+      const htmlFullPath = path.join(articlesDir, "index.html");
+      fs.writeFileSync(htmlFullPath, html, "utf-8");
+
+      await convertLinksInFile(htmlFullPath, tempDir);
+
+      const result = fs.readFileSync(htmlFullPath, "utf-8");
       expect(result).toContain("edit.html");
       expect(result).toContain("diff.html");
       expect(result).toContain("image.jpg");

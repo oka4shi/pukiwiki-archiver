@@ -1,11 +1,11 @@
 import * as fs from "fs";
 import * as path from "path";
-import { convertLinksInHtml } from "./lib/linkConverter.ts";
+import { convertLinksInFile } from "./lib/linkConverter.ts";
 
 /**
  * ディレクトリ内のすべてのHTMLファイルを再帰的に処理する
  */
-async function processDirectory(dir: string, baseDir: string): Promise<void> {
+async function processDirectory(dir: string): Promise<void> {
   const files = fs.readdirSync(dir);
 
   for (const file of files) {
@@ -14,20 +14,13 @@ async function processDirectory(dir: string, baseDir: string): Promise<void> {
 
     if (stat.isDirectory()) {
       // 再帰的にディレクトリを処理
-      await processDirectory(filePath, baseDir);
+      await processDirectory(filePath);
     } else if (stat.isFile() && file.endsWith(".html")) {
       // HTMLファイルを処理
-      const relativeFilePath = path.relative(baseDir, filePath);
-      console.log(`Processing: ${relativeFilePath}`);
+      console.log(`Processing: ${filePath}`);
 
       try {
-        const html = fs.readFileSync(filePath, "utf-8");
-        const converted = await convertLinksInHtml(
-          html,
-          relativeFilePath,
-          baseDir,
-        );
-        fs.writeFileSync(filePath, converted, "utf-8");
+        await convertLinksInFile(filePath, dir);
         console.log(`  ✓ Converted`);
       } catch (error) {
         console.error(
@@ -78,13 +71,13 @@ async function main() {
 
   if (inputDir === outputDir) {
     // インプレース変換の場合
-    await processDirectory(absoluteInputDir, absoluteInputDir);
+    await processDirectory(absoluteInputDir);
   } else {
     // 別ディレクトリへのコピー + 変換の場合
     // まずファイルツリーをコピー
     copyDirectory(absoluteInputDir, absoluteOutputDir);
     // 次に変換
-    await processDirectory(absoluteOutputDir, absoluteOutputDir);
+    await processDirectory(absoluteOutputDir);
   }
 
   console.log();

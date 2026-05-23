@@ -65,14 +65,14 @@ bun run convert
 
 ### 添付ファイル
 
-「全ページの添付ファイル一覧」(`https://wiki.example.com/?plugin=attach&pcmd=list`)にあるリンク先(`div#contents > div#body > ul > li > ul li > a`)が取得される。保存される添付ファイルのURLは、以下のルールに従って変換される。
+「全ページの添付ファイル一覧」(`https://wiki.example.com/?plugin=attach&pcmd=list`)にあるファイル名(`div#contents > div#body > ul > li > ul li > a`)の、`pcmd=open`を含むリンク先のファイルが取得される。保存される添付ファイルのURLは、以下のルールに従って変換される。
 
 - `/?plugin=attach&pcmd=open&file=ファイル名&refer=記事名` -> `/attachments/記事名/_attachments/0/ファイル名`
 - `/?plugin=attach&pcmd=open&file=ファイル名&refer=記事名&age=世代` -> `/attachments/記事名/_attachments/世代/ファイル名`
 
 ### 添付ファイルの詳細ページ
 
-「全ページの添付ファイル一覧」(`https://wiki.example.com/?plugin=attach&pcmd=list`)にあるファイル名(`div#contents > div#body > ul > li > ul > li`)の、右の`詳細`というリンク先のページが取得される。保存されるURLは、以下のルールに従って変換される。
+「全ページの添付ファイル一覧」(`https://wiki.example.com/?plugin=attach&pcmd=list`)にあるファイル名(`div#contents > div#body > ul > li > ul li > a`)の、`pcmd=info`を含むリンク先のページが取得される。保存されるURLは、以下のルールに従って変換される。
 
 - `/?plugin=attach&pcmd=info&file=ファイル名&refer=記事名` -> `/attachments/記事名/_info/0/ファイル名/index.html`
 - `/?plugin=attach&pcmd=info&file=ファイル名&refer=記事名&age=世代` -> `/attachments/記事名/_info/世代/ファイル名/index.html`

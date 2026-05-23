@@ -1,16 +1,30 @@
+/** PukiWiki が記事リンクに使うプレフィックス。 */
+const ARTICLE_HREF_PREFIX = "./?";
+
 /**
- * `?PageName` 形式の href からページ名（デコード済み）を取得する。
+ * `./?PageName` 形式の href からページ名（デコード済み）を取得する。
  * 操作URL（`=` を含む）の場合は null を返す。
  */
 export function articleHrefToPageName(href: string): string | null {
-  if (!href.startsWith("?")) return null;
-  const raw = href.slice(1);
+  if (!href.startsWith(ARTICLE_HREF_PREFIX)) return null;
+  const raw = href.slice(ARTICLE_HREF_PREFIX.length);
   if (!raw || raw.includes("=")) return null;
   try {
     return decodeURIComponent(raw);
   } catch {
     return raw;
   }
+}
+
+/**
+ * `./?PageName` 形式の href から URL エンコード済みのページ名を取得する。
+ * 操作URL（`=` を含む）の場合は null を返す。
+ */
+export function articleHrefToRawPageName(href: string): string | null {
+  if (!href.startsWith(ARTICLE_HREF_PREFIX)) return null;
+  const raw = href.slice(ARTICLE_HREF_PREFIX.length);
+  if (!raw || raw.includes("=")) return null;
+  return raw;
 }
 
 /** `?plugin=attach&pcmd=open/info` 形式の href を保存パスに変換する。 */

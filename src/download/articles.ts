@@ -2,7 +2,11 @@ import { configs, OUTPUT_DIR } from "../config";
 import { createFetcher } from "../lib/fetch";
 import { createDownloader } from "../lib/downloader";
 import { parseArticleHrefs } from "../lib/parse";
-import { articleHrefToPageName, pageNameToOperations } from "../lib/urlToPath";
+import {
+  articleHrefToPageName,
+  articleHrefToRawPageName,
+  pageNameToOperations,
+} from "../lib/urlToPath";
 
 type Fetcher = ReturnType<typeof createFetcher>;
 
@@ -21,7 +25,8 @@ export async function downloadArticles(
     if (!pageName) continue;
 
     console.log(`\n  [${pageName}]`);
-    const rawPageName = href.slice(1);
+    const rawPageName = articleHrefToRawPageName(href);
+    if (!rawPageName) continue;
 
     await dl.saveHtml(href, `${pageName}/index.html`);
     for (const { url, path } of pageNameToOperations(pageName, rawPageName)) {

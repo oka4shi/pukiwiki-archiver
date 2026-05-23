@@ -37,13 +37,13 @@ export function articleHrefToRawPageName(href: string): string | null {
   return raw;
 }
 
-/** `?plugin=attach&pcmd=open/info` 形式の href を保存パスに変換する。 */
+/** `./?plugin=attach&pcmd=open/info` 形式の href を保存パスに変換する。 */
 export function attachmentHrefToPath(href: string): string | null {
   // HTML エンティティをデコード
   const decodedHref = decodeHtmlEntities(href);
-  
-  if (!decodedHref.startsWith("?")) return null;
-  const query = decodedHref.slice(1);
+
+  if (!decodedHref.startsWith(ARTICLE_HREF_PREFIX)) return null;
+  const query = decodedHref.slice(ARTICLE_HREF_PREFIX.length);
   if (!query.includes("=")) return null;
   try {
     const params = new URLSearchParams(query);

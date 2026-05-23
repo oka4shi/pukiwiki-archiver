@@ -111,49 +111,49 @@ describe("pageNameToOperations", () => {
 describe("attachmentHrefToPath", () => {
   it("添付ファイルのパスに /attachments/ プレフィックスを付ける", () => {
     const path = attachmentHrefToPath(
-      "?plugin=attach&pcmd=open&file=test.txt&refer=TestPage",
+      "./?plugin=attach&pcmd=open&file=test.txt&refer=TestPage",
     );
     expect(path).toBe("attachments/TestPage/_attachments/0/test.txt");
   });
 
   it("添付ファイルの世代指定に対応する", () => {
     const path = attachmentHrefToPath(
-      "?plugin=attach&pcmd=open&file=test.txt&refer=TestPage&age=3",
+      "./?plugin=attach&pcmd=open&file=test.txt&refer=TestPage&age=3",
     );
     expect(path).toBe("attachments/TestPage/_attachments/3/test.txt");
   });
 
   it("添付ファイル詳細ページのパス構造を変更する", () => {
     const path = attachmentHrefToPath(
-      "?plugin=attach&pcmd=info&file=test.txt&refer=TestPage",
+      "./?plugin=attach&pcmd=info&file=test.txt&refer=TestPage",
     );
     expect(path).toBe("attachments/TestPage/_info/0/test.txt/index.html");
   });
 
   it("添付ファイル詳細ページの世代指定に対応する", () => {
     const path = attachmentHrefToPath(
-      "?plugin=attach&pcmd=info&file=test.txt&refer=TestPage&age=2",
+      "./?plugin=attach&pcmd=info&file=test.txt&refer=TestPage&age=2",
     );
     expect(path).toBe("attachments/TestPage/_info/2/test.txt/index.html");
   });
 
   it("スペースを含むファイル名と記事名を正しく処理する", () => {
     const path = attachmentHrefToPath(
-      "?plugin=attach&pcmd=open&file=test+file.txt&refer=Test+Page",
+      "./?plugin=attach&pcmd=open&file=test+file.txt&refer=Test+Page",
     );
     expect(path).toBe("attachments/Test Page/_attachments/0/test file.txt");
   });
 
   it("HTML エンティティで&がエンコードされたURLをパースする", () => {
     const path = attachmentHrefToPath(
-      "?plugin=attach&amp;pcmd=open&amp;file=ore.jpg&amp;refer=FrontPage",
+      "./?plugin=attach&amp;pcmd=open&amp;file=ore.jpg&amp;refer=FrontPage",
     );
     expect(path).toBe("attachments/FrontPage/_attachments/0/ore.jpg");
   });
 
   it("HTML エンティティの&を含むファイル詳細ページをパースする", () => {
     const path = attachmentHrefToPath(
-      "?plugin=attach&amp;pcmd=info&amp;file=test.pdf&amp;refer=TestPage&amp;age=2",
+      "./?plugin=attach&amp;pcmd=info&amp;file=test.pdf&amp;refer=TestPage&amp;age=2",
     );
     expect(path).toBe("attachments/TestPage/_info/2/test.pdf/index.html");
   });

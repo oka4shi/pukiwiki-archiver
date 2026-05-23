@@ -28,5 +28,5 @@ export const listPages = async ({ baseUrl }: typeof configs) => {
 };
 
 if (import.meta.main) {
-  const pagesUrls = await listPages(configs);
+  await listPages(configs);
 }

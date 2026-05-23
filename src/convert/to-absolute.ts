@@ -1,27 +1,33 @@
 import * as fs from "fs";
 import * as path from "path";
-import { convertLinksInFile } from "./lib/linkConverter.ts";
+import { convertLinksToAbsolutePath } from "../lib/linkConverter.ts";
 
 /**
  * ディレクトリ内のすべてのHTMLファイルを再帰的に処理する
  */
-async function processDirectory(dir: string): Promise<void> {
-  const files = fs.readdirSync(dir);
+async function processDirectory(
+  directoryAbsolutePath: string,
+  archiveBaseAbsolutePath: string,
+): Promise<void> {
+  const files = fs.readdirSync(directoryAbsolutePath);
 
   for (const file of files) {
-    const filePath = path.join(dir, file);
-    const stat = fs.statSync(filePath);
+    const fileAbsolutePath = path.join(directoryAbsolutePath, file);
+    const stat = fs.statSync(fileAbsolutePath);
 
     if (stat.isDirectory()) {
       // 再帰的にディレクトリを処理
-      await processDirectory(filePath);
+      await processDirectory(fileAbsolutePath, archiveBaseAbsolutePath);
     } else if (stat.isFile() && file.endsWith(".html")) {
       // HTMLファイルを処理
-      console.log(`Processing: ${filePath}`);
+      console.log(`Processing: ${fileAbsolutePath}`);
 
       try {
-        await convertLinksInFile(filePath, dir);
-        console.log(`  ✓ Converted`);
+        await convertLinksToAbsolutePath(
+          fileAbsolutePath,
+          archiveBaseAbsolutePath,
+        );
+        console.log(`  ✓ Converted to absolute paths`);
       } catch (error) {
         console.error(
           `  ✗ Error: ${error instanceof Error ? error.message : String(error)}`,
@@ -64,20 +70,20 @@ async function main() {
     fs.mkdirSync(absoluteOutputDir, { recursive: true });
   }
 
-  console.log(`Converting links...`);
+  console.log(`Converting links to absolute paths...`);
   console.log(`  Input: ${absoluteInputDir}`);
   console.log(`  Output: ${absoluteOutputDir}`);
   console.log();
 
   if (inputDir === outputDir) {
     // インプレース変換の場合
-    await processDirectory(absoluteInputDir);
+    await processDirectory(absoluteInputDir, absoluteInputDir);
   } else {
     // 別ディレクトリへのコピー + 変換の場合
     // まずファイルツリーをコピー
     copyDirectory(absoluteInputDir, absoluteOutputDir);
     // 次に変換
-    await processDirectory(absoluteOutputDir);
+    await processDirectory(absoluteOutputDir, absoluteOutputDir);
   }
 
   console.log();

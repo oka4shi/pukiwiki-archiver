@@ -143,4 +143,18 @@ describe("attachmentHrefToPath", () => {
     );
     expect(path).toBe("attachments/Test Page/_attachments/0/test file.txt");
   });
+
+  it("HTML エンティティで&がエンコードされたURLをパースする", () => {
+    const path = attachmentHrefToPath(
+      "?plugin=attach&amp;pcmd=open&amp;file=ore.jpg&amp;refer=FrontPage",
+    );
+    expect(path).toBe("attachments/FrontPage/_attachments/0/ore.jpg");
+  });
+
+  it("HTML エンティティの&を含むファイル詳細ページをパースする", () => {
+    const path = attachmentHrefToPath(
+      "?plugin=attach&amp;pcmd=info&amp;file=test.pdf&amp;refer=TestPage&amp;age=2",
+    );
+    expect(path).toBe("attachments/TestPage/_info/2/test.pdf/index.html");
+  });
 });

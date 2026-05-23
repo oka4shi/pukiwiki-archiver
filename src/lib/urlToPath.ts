@@ -1,6 +1,15 @@
 /** PukiWiki が記事リンクに使うプレフィックス。 */
 const ARTICLE_HREF_PREFIX = "./?";
 
+/** HTML エンティティをデコードする。 */
+function decodeHtmlEntities(text: string): string {
+  return text
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'");
+}
 /**
  * `./?PageName` 形式の href からページ名（デコード済み）を取得する。
  * 操作URL（`=` を含む）の場合は null を返す。
@@ -30,8 +39,11 @@ export function articleHrefToRawPageName(href: string): string | null {
 
 /** `?plugin=attach&pcmd=open/info` 形式の href を保存パスに変換する。 */
 export function attachmentHrefToPath(href: string): string | null {
-  if (!href.startsWith("?")) return null;
-  const query = href.slice(1);
+  // HTML エンティティをデコード
+  const decodedHref = decodeHtmlEntities(href);
+  
+  if (!decodedHref.startsWith("?")) return null;
+  const query = decodedHref.slice(1);
   if (!query.includes("=")) return null;
   try {
     const params = new URLSearchParams(query);

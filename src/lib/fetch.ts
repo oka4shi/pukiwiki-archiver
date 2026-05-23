@@ -2,6 +2,8 @@ type FetchResult =
   | { success: true; response: Response }
   | { success: false; error: { message: string; status?: number } };
 
+export type Fetcher = ReturnType<typeof createFetcher>;
+
 export const createFetcher = (
   baseUrl: string,
   basicAuth?: { username?: string; password?: string },

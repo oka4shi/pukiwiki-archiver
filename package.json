@@ -5,6 +5,9 @@
   "private": true,
   "scripts": {
     "download": "bun run src/download.ts",
+    "download:list": "bun run src/download/list.ts",
+    "download:articles": "bun run src/download/articles.ts",
+    "download:attachments": "bun run src/download/attachments.ts",
     "fix": "run-s --continue-on-error format lint:tsc lint:eslint",
     "lint": "run-s --continue-on-error lint:tsc lint:eslint",
     "lint:tsc": "tsc --noEmit",

@@ -13,7 +13,36 @@ export function articleHrefToPageName(href: string): string | null {
   }
 }
 
-/** ページ名（デコード済み）から各操作URLとその保存パスのマップを生成する。 */
+/** `?plugin=attach&pcmd=open/info` 形式の href を保存パスに変換する。 */
+export function attachmentHrefToPath(href: string): string | null {
+  if (!href.startsWith("?")) return null;
+  const query = href.slice(1);
+  if (!query.includes("=")) return null;
+  try {
+    const params = new URLSearchParams(query);
+    const plugin = params.get("plugin");
+    const pcmd = params.get("pcmd");
+    const file = params.get("file");
+    const refer = params.get("refer");
+    const age = params.get("age") ?? "0";
+
+    if (plugin !== "attach" || !file || !refer) return null;
+
+    const decodedFile = decodeURIComponent(file);
+    const decodedRefer = decodeURIComponent(refer);
+    const decodedAge = decodeURIComponent(age);
+
+    if (pcmd === "open") {
+      return `${decodedRefer}/_attachments/${decodedAge}/${decodedFile}`;
+    }
+    if (pcmd === "info") {
+      return `${decodedRefer}/_attachments/_info/${decodedAge}/${decodedFile}/index.html`;
+    }
+  } catch {
+    // 無効な URL はスキップ
+  }
+  return null;
+}
 export function pageNameToOperations(
   pageName: string,
   rawPageName: string, // URL エンコード済みページ名（href から取り出したもの）

@@ -5,3 +5,5 @@ export const configs = {
     password: Bun.env.PASSWORD,
   },
 } as const;
+
+console.log(configs)

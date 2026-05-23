@@ -39,15 +39,14 @@ async function downloadListPages(fetcher: Fetcher): Promise<string[]> {
 
   // ページの一覧は記事URL抽出のためにHTMLを保持する
   const listResult = await fetcher("?cmd=list");
-  let articleHrefs: string[] = [];
-  if (listResult.success) {
-    const html = await listResult.response.text();
-    await saveHtml(OUTPUT_DIR, "list.html", html);
-    console.log("  ✓ list.html");
-    articleHrefs = await parseArticleHrefs(html);
-  } else {
+  if (!listResult.success) {
     console.error(`  ✗ ?cmd=list: ${listResult.error.message}`);
+    process.exit(1);
   }
+  const listHtml = await listResult.response.text();
+  await saveHtml(OUTPUT_DIR, "list.html", listHtml);
+  console.log("  ✓ list.html");
+  const articleHrefs = await parseArticleHrefs(listHtml);
 
   await fetchAndSave(fetcher, "?cmd=filelist", "filelist.html");
   await fetchAndSave(fetcher, "?plugin=attach&pcmd=list", "attachlist.html");

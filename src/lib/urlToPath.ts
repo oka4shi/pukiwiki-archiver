@@ -4,13 +4,14 @@ const ARTICLE_HREF_PREFIX = "./?";
 /**
  * `./?PageName` 形式の href からページ名（デコード済み）を取得する。
  * 操作URL（`=` を含む）の場合は null を返す。
+ * URLパラメータの + をスペースに変換してから decodeURIComponent を実行する。
  */
 export function articleHrefToPageName(href: string): string | null {
   if (!href.startsWith(ARTICLE_HREF_PREFIX)) return null;
   const raw = href.slice(ARTICLE_HREF_PREFIX.length);
   if (!raw || raw.includes("=")) return null;
   try {
-    return decodeURIComponent(raw);
+    return decodeURIComponent(raw.replace(/\+/g, " "));
   } catch {
     return raw;
   }

@@ -52,7 +52,27 @@ describe("articleHrefToPageName", () => {
   });
 
   it("ページ名に = を含む場合（%3D エンコード済み）は正しくデコードして返す", () => {
-    // "A=B" というページ名は href では ?A%3DB になる
+    // "A=B" というページ名は href では ./?A%3DB になる
     expect(articleHrefToPageName("./?A%3DB")).toBe("A=B");
+  });
+
+  it("スペースを含むページ名（+ でエンコード）をデコードして返す", () => {
+    // "Hello World" というページ名は href では ./?Hello+World になることがある
+    expect(articleHrefToPageName("./?Hello+World")).toBe("Hello World");
+  });
+
+  it("プラス記号を含むページ名（%2B エンコード済み）と区別する", () => {
+    // "Hello+World" というページ名は href では ./?Hello%2BWorld になる
+    expect(articleHrefToPageName("./?Hello%2BWorld")).toBe("Hello+World");
+  });
+
+  it("複数のスペース（+ でエンコード）を正しくデコードして返す", () => {
+    // "Hello World Test" というページ名は href では ./?Hello+World+Test になる
+    expect(articleHrefToPageName("./?Hello+World+Test")).toBe("Hello World Test");
+  });
+
+  it("スペースとプラス記号が混在するページ名を区別する", () => {
+    // "Hello World+Test" というページ名は href では ./?Hello+World%2BTest になる
+    expect(articleHrefToPageName("./?Hello+World%2BTest")).toBe("Hello World+Test");
   });
 });

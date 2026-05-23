@@ -19,7 +19,7 @@ export async function parseAttachmentOpenHrefs(html: string): Promise<string[]> 
     {
       element(el) {
         const href = el.getAttribute("href");
-        if (href && href.includes("pcmd=open")) {
+        if (href) {
           hrefs.push(href);
         }
       },
@@ -33,11 +33,11 @@ export async function parseAttachmentOpenHrefs(html: string): Promise<string[]> 
 export async function parseAttachmentInfoHrefs(html: string): Promise<string[]> {
   const hrefs: string[] = [];
   const rewriter = new HTMLRewriter().on(
-    "div#contents > div#body > ul > li > ul li > a",
+    "div#contents > div#body > ul > li > ul li > span.small > a",
     {
       element(el) {
         const href = el.getAttribute("href");
-        if (href && href.includes("pcmd=info")) {
+        if (href) {
           hrefs.push(href);
         }
       },

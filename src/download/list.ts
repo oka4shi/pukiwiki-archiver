@@ -8,7 +8,11 @@ type Fetcher = ReturnType<typeof createFetcher>;
 export async function downloadListPages(
   fetcher: Fetcher,
   delayMs: number,
-): Promise<{ articleHrefs: string[]; attachmentHrefs: string[] }> {
+): Promise<{
+  articleHrefs: string[];
+  attachmentOpenHrefs: string[];
+  attachmentInfoHrefs: string[];
+}> {
   console.log("\nリストページをダウンロード中...");
   const dl = createDownloader(fetcher, OUTPUT_DIR, delayMs);
 
@@ -25,16 +29,17 @@ export async function downloadListPages(
     "?plugin=attach&pcmd=list",
     "attachlist.html",
   );
-  const attachmentHrefs = attachlistHtml
+  const [attachmentOpenHrefs, attachmentInfoHrefs] = attachlistHtml
     ? await parseAttachmentHrefs(attachlistHtml)
-    : [];
+    : [[], []];
 
   await dl.saveHtml("?RecentChanges", "RecentChanges/index.html");
 
   console.log(`\n  → 記事: ${String(articleHrefs.length)} 件`);
-  console.log(`  → 添付ファイル: ${String(attachmentHrefs.length)} 件`);
+  console.log(`  → 添付ファイル: ${String(attachmentOpenHrefs.length)} 件`);
+  console.log(`  → 添付ファイルの詳細ページ: ${String(attachmentInfoHrefs.length)} 件`);
 
-  return { articleHrefs, attachmentHrefs };
+  return { articleHrefs, attachmentOpenHrefs, attachmentInfoHrefs };
 }
 
 if (import.meta.main) {

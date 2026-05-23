@@ -28,7 +28,7 @@ export async function downloadArticles(
     const rawPageName = articleHrefToRawPageName(href);
     if (!rawPageName) continue;
 
-    await dl.saveHtml(href, `${pageName}/index.html`);
+    await dl.saveHtml(href, `articles/${pageName}/index.html`);
     for (const { url, path } of pageNameToOperations(pageName, rawPageName)) {
       await dl.saveHtml(url, path);
     }

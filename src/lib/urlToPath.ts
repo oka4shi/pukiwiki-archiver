@@ -48,10 +48,10 @@ export function attachmentHrefToPath(href: string): string | null {
     const decodedAge = decodeURIComponent(age);
 
     if (pcmd === "open") {
-      return `${decodedRefer}/_attachments/${decodedAge}/${decodedFile}`;
+      return `attachments/${decodedRefer}/_attachments/${decodedAge}/${decodedFile}`;
     }
     if (pcmd === "info") {
-      return `${decodedRefer}/_attachments/_info/${decodedAge}/${decodedFile}/index.html`;
+      return `attachments/${decodedRefer}/_info/${decodedAge}/${decodedFile}/index.html`;
     }
   } catch {
     // 無効な URL はスキップ
@@ -65,27 +65,27 @@ export function pageNameToOperations(
   return [
     {
       url: `?cmd=edit&page=${rawPageName}`,
-      path: `${pageName}/edit.html`,
+      path: `articles/${pageName}/edit.html`,
       label: "編集",
     },
     {
       url: `?cmd=freeze&page=${rawPageName}`,
-      path: `${pageName}/freeze.html`,
+      path: `articles/${pageName}/freeze.html`,
       label: "凍結",
     },
     {
       url: `?cmd=diff&page=${rawPageName}`,
-      path: `${pageName}/diff.html`,
+      path: `articles/${pageName}/diff.html`,
       label: "差分",
     },
     {
       url: `?plugin=attach&pcmd=upload&page=${rawPageName}`,
-      path: `${pageName}/attach.html`,
+      path: `articles/${pageName}/attach.html`,
       label: "添付",
     },
     {
       url: `?plugin=related&page=${rawPageName}`,
-      path: `${pageName}/backlinks.html`,
+      path: `articles/${pageName}/backlinks.html`,
       label: "Backlinks",
     },
   ] as const;

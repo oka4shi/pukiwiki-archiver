@@ -1,5 +1,9 @@
 import { describe, it, expect } from "bun:test";
-import { articleHrefToPageName } from "./urlToPath";
+import {
+  articleHrefToPageName,
+  pageNameToOperations,
+  attachmentHrefToPath,
+} from "./urlToPath";
 
 describe("articleHrefToPageName", () => {
   it("ASCII ページ名を返す", () => {
@@ -74,5 +78,69 @@ describe("articleHrefToPageName", () => {
   it("スペースとプラス記号が混在するページ名を区別する", () => {
     // "Hello World+Test" というページ名は href では ./?Hello+World%2BTest になる
     expect(articleHrefToPageName("./?Hello+World%2BTest")).toBe("Hello World+Test");
+  });
+});
+
+describe("pageNameToOperations", () => {
+  it("記事の編集ページパスに /articles/ プレフィックスを付ける", () => {
+    const ops = pageNameToOperations("TestPage", "TestPage");
+    expect(ops[0].path).toBe("articles/TestPage/edit.html");
+  });
+
+  it("記事の凍結ページパスに /articles/ プレフィックスを付ける", () => {
+    const ops = pageNameToOperations("TestPage", "TestPage");
+    expect(ops[1].path).toBe("articles/TestPage/freeze.html");
+  });
+
+  it("記事の差分ページパスに /articles/ プレフィックスを付ける", () => {
+    const ops = pageNameToOperations("TestPage", "TestPage");
+    expect(ops[2].path).toBe("articles/TestPage/diff.html");
+  });
+
+  it("記事の添付ページパスに /articles/ プレフィックスを付ける", () => {
+    const ops = pageNameToOperations("TestPage", "TestPage");
+    expect(ops[3].path).toBe("articles/TestPage/attach.html");
+  });
+
+  it("記事の backlinks ページパスに /articles/ プレフィックスを付ける", () => {
+    const ops = pageNameToOperations("TestPage", "TestPage");
+    expect(ops[4].path).toBe("articles/TestPage/backlinks.html");
+  });
+});
+
+describe("attachmentHrefToPath", () => {
+  it("添付ファイルのパスに /attachments/ プレフィックスを付ける", () => {
+    const path = attachmentHrefToPath(
+      "?plugin=attach&pcmd=open&file=test.txt&refer=TestPage",
+    );
+    expect(path).toBe("attachments/TestPage/_attachments/0/test.txt");
+  });
+
+  it("添付ファイルの世代指定に対応する", () => {
+    const path = attachmentHrefToPath(
+      "?plugin=attach&pcmd=open&file=test.txt&refer=TestPage&age=3",
+    );
+    expect(path).toBe("attachments/TestPage/_attachments/3/test.txt");
+  });
+
+  it("添付ファイル詳細ページのパス構造を変更する", () => {
+    const path = attachmentHrefToPath(
+      "?plugin=attach&pcmd=info&file=test.txt&refer=TestPage",
+    );
+    expect(path).toBe("attachments/TestPage/_info/0/test.txt/index.html");
+  });
+
+  it("添付ファイル詳細ページの世代指定に対応する", () => {
+    const path = attachmentHrefToPath(
+      "?plugin=attach&pcmd=info&file=test.txt&refer=TestPage&age=2",
+    );
+    expect(path).toBe("attachments/TestPage/_info/2/test.txt/index.html");
+  });
+
+  it("スペースを含むファイル名と記事名を正しく処理する", () => {
+    const path = attachmentHrefToPath(
+      "?plugin=attach&pcmd=open&file=test+file.txt&refer=Test+Page",
+    );
+    expect(path).toBe("attachments/Test Page/_attachments/0/test file.txt");
   });
 });

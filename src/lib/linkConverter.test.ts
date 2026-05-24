@@ -73,6 +73,19 @@ describe("linkConverter", () => {
       );
     });
 
+    it("トップページへのリンクが正しく変換されるか確認", () => {
+      const href = "./";
+      const result = resolveHrefToAbsolutePath(href, currentFile, archiveBase);
+      console.log(result);
+      expect(result).toBe("/");
+    });
+
+    it("./以外で./?から始まらない、無効な形式のURLが変換されないことを確認", () => {
+      const href = "./invalid";
+      const result = resolveHrefToAbsolutePath(href, currentFile, archiveBase);
+      expect(result).toBe(href);
+    });
+
     // リストページ関連
     it("ページの一覧へのリンクが正しく変換できるか確認", () => {
       const href = "./?cmd=list";

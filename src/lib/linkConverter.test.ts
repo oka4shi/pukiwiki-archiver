@@ -69,7 +69,7 @@ describe("linkConverter", () => {
 
   describe("resolveHrefToAbsolutePath", () => {
     const archiveBase = "/tmp/archive";
-    const currentFile = "/tmp/archive/articles/Test/index.html";
+    const currentFile = "/tmp/archive/articles/SubPage/Test/index.html";
 
     it("should keep external URLs unchanged", () => {
       const href = "https://example.com/page";
@@ -78,97 +78,114 @@ describe("linkConverter", () => {
       );
     });
 
-    it("should convert relative links to absolute paths", () => {
-      const href = "edit.html";
+    // リストページ関連
+    it("ページの一覧へのリンクが正しく変換できるか確認", () => {
+      const href = "./?cmd=list";
       const result = resolveHrefToAbsolutePath(href, currentFile, archiveBase);
-      expect(result).toBe("/tmp/archive/articles/Test/edit.html");
+      expect(result).toBe("/list.html");
     });
 
-    it("should resolve links to parent directory", () => {
-      const href = "../OtherArticle/index.html";
+    it("ページファイルの一覧へのリンクが正しく変換できるか確認", () => {
+      const href = "./?cmd=filelist";
       const result = resolveHrefToAbsolutePath(href, currentFile, archiveBase);
-      expect(result).toBe("/tmp/archive/articles/OtherArticle/index.html");
+      expect(result).toBe("/filelist.html");
     });
 
-    it("should resolve links to root", () => {
-      const href = "../../list.html";
+    it("全ページの添付ファイル一覧へのリンクが正しく変換できるか確認", () => {
+      const href = "./?plugin=attach&pcmd=list";
       const result = resolveHrefToAbsolutePath(href, currentFile, archiveBase);
-      expect(result).toBe("/tmp/archive/list.html");
+      expect(result).toBe("/attachlist.html");
+    });
+
+    it("RecentChangesへのリンクが正しく変換できるか確認", () => {
+      const href = "./?RecentChanges";
+      const result = resolveHrefToAbsolutePath(href, currentFile, archiveBase);
+      expect(result).toBe("/RecentChanges/index.html");
+    });
+
+    // 記事ページ関連
+    it("同階層の記事へのリンクが正しく変換できるか確認", () => {
+      const href = "./?SubPage/%E8%A8%98%E4%BA%8B";
+      const result = resolveHrefToRelativePath(href, currentFile, archiveBase);
+      expect(result).toBe("/articles/SubPage/%E8%A8%98%E4%BA%8B/");
+    });
+
+    it("一個深い階層の記事へのリンクが正しく変換できるか確認", () => {
+      const href = "./?SubPage/SubSubPage/%E8%A8%98%E4%BA%8B";
+      const result = resolveHrefToRelativePath(href, currentFile, archiveBase);
+      expect(result).toContain("/articles/SubPage/SubSubPage/%E8%A8%98%E4%BA%8B/");
+    });
+
+    it("一個浅い階層の記事へのリンクが正しく変換できるか確認", () => {
+      const href = "./?%E8%A8%98%E4%BA%8B";
+      const result = resolveHrefToRelativePath(href, currentFile, archiveBase);
+      expect(result).toContain("/articles/%E8%A8%98%E4%BA%8B/");
+    });
+
+    it("同階層（別サブページ）の記事へのリンクが正しく変換できるか確認", () => {
+      const href = "./?SubPage2/SuperArticle";
+      const result = resolveHrefToRelativePath(href, currentFile, archiveBase);
+      expect(result).toContain("/articles/SubPage2/SuperArticle/");
+    });
+
+    // 各記事の操作・Backlinksページ関連
+    it("各記事の編集ページへのリンクが正しく変換できるか確認", () => {
+      const href = "./?cmd=edit&page=TestPage";
+      const result = resolveHrefToAbsolutePath(href, currentFile, archiveBase);
+      expect(result).toBe("/articles/TestPage/edit.html");
+    });
+
+    it("各記事の凍結ページへのリンクが正しく変換できるか確認", () => {
+      const href = "./?cmd=freeze&page=TestPage";
+      const result = resolveHrefToAbsolutePath(href, currentFile, archiveBase);
+      expect(result).toBe("/articles/TestPage/freeze.html");
+    });
+
+    it("各記事の差分ページへのリンクが正しく変換できるか確認", () => {
+      const href = "./?cmd=diff&page=TestPage";
+      const result = resolveHrefToAbsolutePath(href, currentFile, archiveBase);
+      expect(result).toBe("/articles/TestPage/diff.html");
+    });
+
+    it("各記事の添付ページへのリンクが正しく変換できるか確認", () => {
+      const href = "./?plugin=attach&pcmd=upload&page=TestPage";
+      const result = resolveHrefToAbsolutePath(href, currentFile, archiveBase);
+      expect(result).toBe("/articles/TestPage/attach.html");
+    });
+
+    it("各記事のBacklinksページへのリンクが正しく変換できるか確認", () => {
+      const href = "./?plugin=related&page=TestPage";
+      const result = resolveHrefToAbsolutePath(href, currentFile, archiveBase);
+      expect(result).toBe("/articles/TestPage/backlinks.html");
     });
   });
 
-  describe("convertLinksToRelativePath", () => {
-    let tempDir: string;
-
-    beforeEach(() => {
-      tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "convert-test-"));
-    });
-
-    afterEach(() => {
-      if (fs.existsSync(tempDir)) {
-        fs.rmSync(tempDir, { recursive: true });
-      }
-    });
-
-    it("should convert href attributes to relative paths", async () => {
-      const htmlPath = path.join(tempDir, "test.html");
-      const html = '<a href="edit.html">Edit</a>';
-      fs.writeFileSync(htmlPath, html, "utf-8");
-
-      await convertLinksToRelativePath(htmlPath, tempDir);
-
-      const result = fs.readFileSync(htmlPath, "utf-8");
-      expect(result).toContain('href="edit.html"');
-    });
-
-    it("should preserve external URLs", async () => {
-      const htmlPath = path.join(tempDir, "test.html");
-      const html = '<a href="https://example.com">External</a>';
-      fs.writeFileSync(htmlPath, html, "utf-8");
-
-      await convertLinksToRelativePath(htmlPath, tempDir);
-
-      const result = fs.readFileSync(htmlPath, "utf-8");
-      expect(result).toContain("https://example.com");
-    });
+  // 添付ファイル関連
+  it("添付ファイルのURLが正しく変換されるか確認", () => {
+    const href =
+      "./?plugin=attach&pcmd=open&file=file.jpg&refer=TestPage";
+    const result = resolveHrefToAbsolutePath(href, "", "");
+    expect(result).toBe("/attachments/TestPage/_attachments/0/file.jpg");
   });
 
-  describe("convertLinksToAbsolutePath", () => {
-    let tempDir: string;
+  it("添付ファイルのURL(世代入り)が正しく変換されるか確認", () => {
+    const href =
+      "./?plugin=attach&pcmd=open&file=file.jpg&refer=TestPage&age=2";
+    const result = resolveHrefToAbsolutePath(href, "", "");
+    expect(result).toBe("/attachments/TestPage/_attachments/2/file.jpg");
+  });
 
-    beforeEach(() => {
-      tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "convert-test-"));
-    });
+  // 添付ファイル詳細ページ関連
+  it("添付ファイル詳細ページのURLが正しく変換されるか確認", () => {
+    const href = "./?plugin=attach&pcmd=info&file=file.jpg&refer=TestPage";
+    const result = resolveHrefToAbsolutePath(href, "", "");
+    expect(result).toBe("/attachments/TestPage/_info/0/file.jpg/index.html");
+  });
 
-    afterEach(() => {
-      if (fs.existsSync(tempDir)) {
-        fs.rmSync(tempDir, { recursive: true });
-      }
-    });
-
-    it("should convert href attributes to absolute paths", async () => {
-      const articlesDir = path.join(tempDir, "articles", "Test");
-      fs.mkdirSync(articlesDir, { recursive: true });
-
-      const htmlPath = path.join(articlesDir, "index.html");
-      const html = '<a href="edit.html">Edit</a>';
-      fs.writeFileSync(htmlPath, html, "utf-8");
-
-      await convertLinksToAbsolutePath(htmlPath, tempDir);
-
-      const result = fs.readFileSync(htmlPath, "utf-8");
-      expect(result).toContain(`href="${path.join(articlesDir, "edit.html")}"`);
-    });
-
-    it("should preserve external URLs", async () => {
-      const htmlPath = path.join(tempDir, "test.html");
-      const html = '<a href="https://example.com">External</a>';
-      fs.writeFileSync(htmlPath, html, "utf-8");
-
-      await convertLinksToAbsolutePath(htmlPath, tempDir);
-
-      const result = fs.readFileSync(htmlPath, "utf-8");
-      expect(result).toContain("https://example.com");
-    });
+  it("添付ファイル詳細ページのURL(世代入り)が正しく変換されるか確認", () => {
+    const href =
+      "./?plugin=attach&pcmd=info&file=file.jpg&refer=TestPage&age=3";
+    const result = resolveHrefToAbsolutePath(href, "", "");
+    expect(result).toBe("/attachments/TestPage/_info/3/file.jpg/index.html");
   });
 });

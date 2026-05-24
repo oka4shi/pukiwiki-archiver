@@ -57,6 +57,7 @@ bun run convert:absolute --input /path/to/input --output /path/to/output
 - ページの一覧: `https://wiki.example.com/?cmd=list` -> `/list.html`
 - ページファイルの一覧: `https://wiki.example.com/?cmd=filelist` -> `/filelist.html`
 - 全ページの添付ファイル一覧: `https://wiki.example.com/?plugin=attach&pcmd=list` -> `/attachlist.html`
+  （- 履歴一覧ページ: `https://wiki.example.com/?cmd=history` -> `/history.html`: 壊れているようで、リンクは存在するがページが存在しないので、その旨を書いたダミーページを/history.htmlに保存する）
 
 #### 共通ページ
 

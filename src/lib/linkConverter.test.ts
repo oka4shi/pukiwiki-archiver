@@ -105,6 +105,12 @@ describe("linkConverter", () => {
       expect(result).toBe("/attachlist.html");
     });
 
+    it("履歴一覧ページへのリンクが正しく変換できるか確認", () => {
+      const href = "./?cmd=history";
+      const result = resolveHrefToAbsolutePath(href, currentFile, archiveBase);
+      expect(result).toBe("/history.html");
+    });
+
     it("RecentChangesへのリンクが正しく変換できるか確認", () => {
       const href = "./?RecentChanges";
       const result = resolveHrefToAbsolutePath(href, currentFile, archiveBase);

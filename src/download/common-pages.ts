@@ -1,6 +1,7 @@
 import { configs, OUTPUT_DIR } from "../config";
 import { createFetcher } from "../lib/fetch";
 import { createDownloader } from "../lib/downloader";
+import { saveContent } from "../lib/save";
 import {
   parseArticleHrefs,
   parseAttachmentOpenHrefs,
@@ -48,6 +49,12 @@ export async function downloadListPages(
   const articleHrefs = await parseArticleHrefs(listHtml);
 
   await dl.saveHtml("?cmd=filelist", "filelist.html");
+
+  // ?cmd=history は壊れており実際のページが存在しないため、ダミーページを保存する
+  const historyDummyHtml =
+    "<!DOCTYPE html><html><body><p>履歴一覧ページ (?cmd=history) はこのWikiでは利用できません。</p></body></html>";
+  await saveContent(OUTPUT_DIR, "history.html", historyDummyHtml);
+  console.log("  ✓ history.html (ダミー)");
 
   const attachlistHtml = await dl.saveHtml(
     "?plugin=attach&pcmd=list",

@@ -17,7 +17,7 @@ export type PukiWikiUrl =
       cmd: "edit" | "freeze" | "diff" | "backup";
       page: string;
     }
-  | { type: "cmd"; cmd: "list" | "filelist" }
+  | { type: "cmd"; cmd: "list" | "filelist" | "history" }
   | { type: "cmd"; cmd: "attach"; page: string }
   | { type: "cmd"; cmd: "attachlist" }
   | { type: "cmd"; cmd: "newpage" | "search" | "rss" }
@@ -69,6 +69,9 @@ export function parsePukiWikiUrl(href: string): PukiWikiUrl {
     }
     if (cmd === "filelist") {
       return { type: "cmd", cmd: "filelist" };
+    }
+    if (cmd === "history") {
+      return { type: "cmd", cmd: "history" };
     }
     if (
       cmd === "edit" ||

@@ -51,6 +51,16 @@ export function validateAndCreateDirectories(
 }
 
 /**
+ * ディレクトリの中身を削除してから再作成する
+ */
+export function cleanDirectory(dir: string): void {
+  if (fs.existsSync(dir)) {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+  fs.mkdirSync(dir, { recursive: true });
+}
+
+/**
  * ディレクトリツリーをコピーする
  */
 export function copyDirectory(src: string, dest: string): void {

@@ -2,6 +2,7 @@ import { convertLinksToAbsolutePath } from "../lib/linkConverter.ts";
 import {
   parseDirectoryArgs,
   validateAndCreateDirectories,
+  cleanDirectory,
   copyDirectory,
   processHtmlDirectory,
 } from "./shared.ts";
@@ -26,7 +27,8 @@ async function main() {
       convertLinksToAbsolutePath,
     );
   } else {
-    // 別ディレクトリへのコピー + 変換の場合
+    // 別ディレクトリへのコピー + 変換の場合：古いファイルが残らないようにクリアしてからコピー
+    cleanDirectory(absoluteOutputDir);
     copyDirectory(absoluteInputDir, absoluteOutputDir);
     await processHtmlDirectory(
       absoluteOutputDir,

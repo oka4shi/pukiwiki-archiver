@@ -30,7 +30,9 @@ export async function downloadArticles(
 
     // FrontPage は特殊ページ：ルートに保存
     const savePath =
-      pageName === "FrontPage" ? "index.html" : `articles/${pageName}/index.html`;
+      pageName === "FrontPage"
+        ? "index.html"
+        : `articles/${pageName}/index.html`;
 
     await dl.saveHtml(href, savePath);
     for (const { url, path } of pageNameToOperations(pageName, rawPageName)) {

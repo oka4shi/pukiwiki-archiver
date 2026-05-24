@@ -106,6 +106,13 @@ bun run convert:absolute --input /path/to/input --output /path/to/output
 - `/?plugin=attach&pcmd=open&file=ファイル名&refer=記事名` -> `/attachments/記事名/_attachments/0/ファイル名`
 - `/?plugin=attach&pcmd=open&file=ファイル名&refer=記事名&age=世代` -> `/attachments/記事名/_attachments/世代/ファイル名`
 
+#### 添付ファイルのパスの変換規則
+
+添付ファイルは以下のパスで参照されることもあるので、リンク変換時にはこれらも変換する必要がある。
+
+- `./?plugin=attach&refer=記事名&openfile=ファイル名` -> `/attachments/記事名/_attachments/0/ファイル名`
+- `./?plugin=ref&page=記事名&src=ファイル名` -> `/attachments/記事名/_attachments/0/ファイル名`
+
 ### 添付ファイルの詳細ページ
 
 「全ページの添付ファイル一覧」(`https://wiki.example.com/?plugin=attach&pcmd=list`)にあるファイル名の横の小さいテキスト（[詳細]と書いてあるもの）のリンク(`div#contents > div#body > ul > li > ul li > span.small > a`)の先のページが取得される。保存されるURLは、以下のルールに従って変換される。

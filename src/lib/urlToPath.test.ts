@@ -92,32 +92,32 @@ describe("articleHrefToPageName", () => {
 describe("pageNameToOperations", () => {
   it("各操作ページの url と path が正しく生成される", () => {
     const ops = pageNameToOperations("TestPage", "TestPage");
-    const byLabel = Object.fromEntries(ops.map((op) => [op.label, op]));
+    const find = (label: string) => ops.find((op) => op.label === label);
 
-    expect(byLabel["編集"].path).toBe("articles/TestPage/edit.html");
-    expect(byLabel["凍結"].path).toBe("articles/TestPage/freeze.html");
-    expect(byLabel["凍結解除"].path).toBe("articles/TestPage/unfreeze.html");
-    expect(byLabel["差分"].path).toBe("articles/TestPage/diff.html");
-    expect(byLabel["履歴"].path).toBe("articles/TestPage/backup.html");
-    expect(byLabel["添付"].path).toBe("articles/TestPage/attach.html");
-    expect(byLabel["複製"].path).toBe("articles/TestPage/template.html");
-    expect(byLabel["名前変更"].path).toBe("articles/TestPage/rename.html");
-    expect(byLabel.Backlinks.path).toBe("articles/TestPage/backlinks.html");
+    expect(find("編集")?.path).toBe("articles/TestPage/edit.html");
+    expect(find("凍結")?.path).toBe("articles/TestPage/freeze.html");
+    expect(find("凍結解除")?.path).toBe("articles/TestPage/unfreeze.html");
+    expect(find("差分")?.path).toBe("articles/TestPage/diff.html");
+    expect(find("履歴")?.path).toBe("articles/TestPage/backup.html");
+    expect(find("添付")?.path).toBe("articles/TestPage/attach.html");
+    expect(find("複製")?.path).toBe("articles/TestPage/template.html");
+    expect(find("名前変更")?.path).toBe("articles/TestPage/rename.html");
+    expect(find("Backlinks")?.path).toBe("articles/TestPage/backlinks.html");
   });
 
   it("FrontPageの操作ページパスに /articles/FrontPage プレフィックスを付ける", () => {
     const ops = pageNameToOperations("FrontPage", "FrontPage");
-    const byLabel = Object.fromEntries(ops.map((op) => [op.label, op]));
+    const find = (label: string) => ops.find((op) => op.label === label);
 
-    expect(byLabel["編集"].path).toBe("articles/FrontPage/edit.html");
-    expect(byLabel["凍結"].path).toBe("articles/FrontPage/freeze.html");
-    expect(byLabel["凍結解除"].path).toBe("articles/FrontPage/unfreeze.html");
-    expect(byLabel["差分"].path).toBe("articles/FrontPage/diff.html");
-    expect(byLabel["履歴"].path).toBe("articles/FrontPage/backup.html");
-    expect(byLabel["添付"].path).toBe("articles/FrontPage/attach.html");
-    expect(byLabel["複製"].path).toBe("articles/FrontPage/template.html");
-    expect(byLabel["名前変更"].path).toBe("articles/FrontPage/rename.html");
-    expect(byLabel.Backlinks.path).toBe("articles/FrontPage/backlinks.html");
+    expect(find("編集")?.path).toBe("articles/FrontPage/edit.html");
+    expect(find("凍結")?.path).toBe("articles/FrontPage/freeze.html");
+    expect(find("凍結解除")?.path).toBe("articles/FrontPage/unfreeze.html");
+    expect(find("差分")?.path).toBe("articles/FrontPage/diff.html");
+    expect(find("履歴")?.path).toBe("articles/FrontPage/backup.html");
+    expect(find("添付")?.path).toBe("articles/FrontPage/attach.html");
+    expect(find("複製")?.path).toBe("articles/FrontPage/template.html");
+    expect(find("名前変更")?.path).toBe("articles/FrontPage/rename.html");
+    expect(find("Backlinks")?.path).toBe("articles/FrontPage/backlinks.html");
   });
 });
 

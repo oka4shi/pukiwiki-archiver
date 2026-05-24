@@ -11,11 +11,17 @@ function decodeHtmlEntities(text: string): string {
     .replace(/&#39;/g, "'");
 }
 /**
- * `./?PageName` 形式の href からページ名（デコード済み）を取得する。
+ * `./?PageName` または `/` 形式の href からページ名（デコード済み）を取得する。
+ * `/` は FrontPage を意味する。
  * 操作URL（`=` を含む）の場合は null を返す。
  * URLパラメータの + をスペースに変換してから decodeURIComponent を実行する。
  */
 export function articleHrefToPageName(href: string): string | null {
+  // FrontPage の場合
+  if (href === "/") {
+    return "FrontPage";
+  }
+
   if (!href.startsWith(ARTICLE_HREF_PREFIX)) return null;
   const raw = href.slice(ARTICLE_HREF_PREFIX.length);
   if (!raw || raw.includes("=")) return null;
@@ -27,10 +33,16 @@ export function articleHrefToPageName(href: string): string | null {
 }
 
 /**
- * `./?PageName` 形式の href から URL エンコード済みのページ名を取得する。
+ * `./?PageName` または `/` 形式の href から URL エンコード済みのページ名を取得する。
+ * `/` は FrontPage を意味する。
  * 操作URL（`=` を含む）の場合は null を返す。
  */
 export function articleHrefToRawPageName(href: string): string | null {
+  // FrontPage の場合
+  if (href === "/") {
+    return "FrontPage";
+  }
+
   if (!href.startsWith(ARTICLE_HREF_PREFIX)) return null;
   const raw = href.slice(ARTICLE_HREF_PREFIX.length);
   if (!raw || raw.includes("=")) return null;

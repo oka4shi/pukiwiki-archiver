@@ -159,6 +159,12 @@ export function resolveHrefToAbsolutePath(
     return href;
   }
 
+  // 必須パラメータが空の場合は相対パスを解決しない
+  // （パラメータが渡されていないケースを避ける）
+  if (!currentFileAbsolutePath || !archiveBaseAbsolutePath) {
+    return href;
+  }
+
   // 現在のファイルの親ディレクトリを基点にした相対パスを解決
   const currentDir = path.dirname(currentFileAbsolutePath);
   const absolutePath = path.resolve(currentDir, href);

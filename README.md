@@ -6,24 +6,42 @@ PukiWikiのページをクローリングして、ローカルにHTMLファイ�
 
 ## 使い方
 
-[Bun](https://bun.com)が必要です。
+[Bun](https://bun.com)が必要です。使用時はBun以外への依存はありません。
 
-1. 依存関係をインストール
+### 1. 全てのページをダウンロード
 
-```bash
-bun install
-```
-
-2. 全てのページをダウンロード
+記事ページ、添付ファイル、操作ページなど、アーカイブ対象のサイトの全てのページをダウンロードします。
+デフォルトでは`./dist`ディレクトリに保存されます。
 
 ```bash
 bun run download
 ```
 
-3. ダウンロード済みのファイルのリンクなどを変換
+### 2. ダウンロード済みのファイルのリンクなどを変換
+
+ダウンロードしたhtmlファイルのリンクを変換します。
+
+リンクを相対パスに変換する場合:
 
 ```bash
-bun run convert
+bun run convert:relative
+```
+
+リンクを絶対パスに変換する場合:
+
+```bash
+bun run convert:absolute
+```
+
+#### ディレクトリの指定
+
+変換後のファイルは、デフォルトでは`./dist`ディレクトリから入力され、`./archive`ディレクトリに出力されます。
+
+入力ディレクトリと出力ディレクトリを指定することもできます:
+
+```bash
+bun run convert:relative --input /path/to/input --output /path/to/output
+bun run convert:absolute --input /path/to/input --output /path/to/output
 ```
 
 ## アーカイブ後のページの構成

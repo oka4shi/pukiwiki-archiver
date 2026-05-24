@@ -73,6 +73,11 @@ export function resolveHrefToAbsolutePath(
     return href;
   }
 
+  // ./（トップページ）の場合
+  if (href === "./") {
+    return "/";
+  }
+
   // ./?で始まるPukiWiki URLの解析
   if (href.startsWith("./?")) {
     const queryPart = href.substring(3); // "./?" を削除
@@ -147,6 +152,11 @@ export function resolveHrefToAbsolutePath(
       // ./?SubPage/ArticleName -> /articles/SubPage/ArticleName/
       return `/articles/${queryPart}/`;
     }
+  }
+
+  // ./?から始まらない ./ で始まるもの（./invalid など）は変換しない
+  if (href.startsWith("./") && !href.startsWith("./?") && href !== "./") {
+    return href;
   }
 
   // 現在のファイルの親ディレクトリを基点にした相対パスを解決

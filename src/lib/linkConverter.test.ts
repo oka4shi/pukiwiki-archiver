@@ -142,6 +142,19 @@ describe("linkConverter", () => {
       expect(result).toBe("/rss.xml");
     });
 
+    // アセットリンク関連
+    it("skin/pukiwiki.cssへのリンクが正しく変換できるか確認", () => {
+      const href = "skin/pukiwiki.css";
+      const result = resolveHrefToAbsolutePath(href, currentFile, archiveBase);
+      expect(result).toBe("/skin/pukiwiki.css");
+    });
+
+    it("image/pukiwiki.pngへのリンクが正しく変換できるか確認", () => {
+      const href = "image/pukiwiki.png";
+      const result = resolveHrefToAbsolutePath(href, currentFile, archiveBase);
+      expect(result).toBe("/image/pukiwiki.png");
+    });
+
     // 記事ページ関連
     it("同階層の記事へのリンクが正しく変換できるか確認", () => {
       const href = "./?SubPage/%E8%A8%98%E4%BA%8B";

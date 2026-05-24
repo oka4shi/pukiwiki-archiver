@@ -91,6 +91,10 @@ export function resolveHrefToAbsolutePath(
       if (href.startsWith("./") && !href.startsWith("./?") && href !== "./") {
         return href;
       }
+      // skin/ と image/ で始まるアセットパスはルート相対パスとして扱う
+      if (href.startsWith("skin/") || href.startsWith("image/")) {
+        return `/${href}`;
+      }
   }
 
   // 必須パラメータが空の場合は相対パスを解決しない

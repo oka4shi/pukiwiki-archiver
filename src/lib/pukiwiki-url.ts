@@ -17,7 +17,7 @@ export type PukiWikiUrl =
       cmd: "edit" | "freeze" | "diff" | "backup";
       page: string;
     }
-  | { type: "cmd"; cmd: "list" | "filelist" | "history" }
+  | { type: "cmd"; cmd: "list" | "filelist" | "backup-index" }
   | { type: "cmd"; cmd: "attach"; page: string }
   | { type: "cmd"; cmd: "attachlist" }
   | { type: "cmd"; cmd: "newpage" | "search" | "rss" }
@@ -71,7 +71,7 @@ export function parsePukiWikiUrl(href: string): PukiWikiUrl {
       return { type: "cmd", cmd: "filelist" };
     }
     if (cmd === "history") {
-      return { type: "cmd", cmd: "history" };
+      return { type: "cmd", cmd: "backup-index" };
     }
     if (
       cmd === "edit" ||
@@ -82,6 +82,10 @@ export function parsePukiWikiUrl(href: string): PukiWikiUrl {
       const page = urlParams.get("page");
       if (page) {
         return { type: "cmd", cmd, page };
+      }
+      // ?cmd=backup without page is the overall history list
+      if (cmd === "backup") {
+        return { type: "cmd", cmd: "backup-index" };
       }
     }
     if (cmd === "newpage" || cmd === "search") {

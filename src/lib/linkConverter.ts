@@ -42,8 +42,8 @@ export function resolveHrefToAbsolutePath(
       if (pukiUrl.cmd === "filelist") {
         return "/filelist.html";
       }
-      if (pukiUrl.cmd === "history") {
-        return "/history.html";
+      if (pukiUrl.cmd === "backup-index") {
+        return "/backup.html";
       }
       if (pukiUrl.cmd === "attachlist") {
         return "/attachlist.html";

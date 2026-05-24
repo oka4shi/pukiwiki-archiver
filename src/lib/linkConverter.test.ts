@@ -106,9 +106,9 @@ describe("linkConverter", () => {
     });
 
     it("履歴一覧ページへのリンクが正しく変換できるか確認", () => {
-      const href = "./?cmd=history";
+      const href = "./?cmd=backup";
       const result = resolveHrefToAbsolutePath(href, currentFile, archiveBase);
-      expect(result).toBe("/history.html");
+      expect(result).toBe("/backup.html");
     });
 
     it("RecentChangesへのリンクが正しく変換できるか確認", () => {

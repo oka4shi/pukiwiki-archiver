@@ -50,11 +50,11 @@ export async function downloadListPages(
 
   await dl.saveHtml("?cmd=filelist", "filelist.html");
 
-  // ?cmd=history は壊れており実際のページが存在しないため、ダミーページを保存する
-  const historyDummyHtml =
-    "<!DOCTYPE html><html><body><p>履歴一覧ページ (?cmd=history) はこのWikiでは利用できません。</p></body></html>";
-  await saveContent(OUTPUT_DIR, "history.html", historyDummyHtml);
-  console.log("  ✓ history.html (ダミー)");
+  // ?cmd=backup (ページ指定なし) は壊れており実際のページが存在しないため、ダミーページを保存する
+  const backupDummyHtml =
+    "<!DOCTYPE html><html><body><p>履歴一覧ページ (?cmd=backup) はこのWikiでは利用できません。</p></body></html>";
+  await saveContent(OUTPUT_DIR, "backup.html", backupDummyHtml);
+  console.log("  ✓ backup.html (ダミー)");
 
   const attachlistHtml = await dl.saveHtml(
     "?plugin=attach&pcmd=list",

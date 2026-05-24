@@ -110,6 +110,17 @@ describe("pageNameToOperations", () => {
     const ops = pageNameToOperations("TestPage", "TestPage");
     expect(ops[5].path).toBe("articles/TestPage/backlinks.html");
   });
+
+  it("FrontPageの操作ページパスに /articles/FrontPage プレフィックスを付ける", () => {
+    const ops = pageNameToOperations("FrontPage", "FrontPage");
+    // FrontPageも通常の記事と同じ方法で操作ページを生成される
+    expect(ops[0].path).toBe("articles/FrontPage/edit.html");
+    expect(ops[1].path).toBe("articles/FrontPage/freeze.html");
+    expect(ops[2].path).toBe("articles/FrontPage/diff.html");
+    expect(ops[3].path).toBe("articles/FrontPage/backup.html");
+    expect(ops[4].path).toBe("articles/FrontPage/attach.html");
+    expect(ops[5].path).toBe("articles/FrontPage/backlinks.html");
+  });
 });
 
 describe("attachmentHrefToPath", () => {

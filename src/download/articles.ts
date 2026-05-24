@@ -28,13 +28,14 @@ export async function downloadArticles(
     const rawPageName = articleHrefToRawPageName(href);
     if (!rawPageName) continue;
 
-    // FrontPage は特殊ページ：ルートに保存
+    // FrontPage は特殊ページ：本体は / から、保存は index.html に
+    const contentUrl = pageName === "FrontPage" ? "/" : href;
     const savePath =
       pageName === "FrontPage"
         ? "index.html"
         : `articles/${pageName}/index.html`;
 
-    await dl.saveHtml(href, savePath);
+    await dl.saveHtml(contentUrl, savePath);
     for (const { url, path } of pageNameToOperations(pageName, rawPageName)) {
       await dl.saveHtml(url, path);
     }

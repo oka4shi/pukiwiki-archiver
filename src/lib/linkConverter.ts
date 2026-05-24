@@ -45,7 +45,16 @@ export function resolveHrefToAbsolutePath(
       if (pukiUrl.cmd === "attachlist") {
         return "/attachlist.html";
       }
-      // edit, freeze, diff, attach
+      if (pukiUrl.cmd === "new") {
+        return "/new.html";
+      }
+      if (pukiUrl.cmd === "search") {
+        return "/search.html";
+      }
+      if (pukiUrl.cmd === "rss") {
+        return "/rss.xml";
+      }
+      // edit, freeze, diff, backup, attach
       const page = "page" in pukiUrl ? pukiUrl.page : "";
       return `/articles/${page}/${pukiUrl.cmd}.html`;
     }

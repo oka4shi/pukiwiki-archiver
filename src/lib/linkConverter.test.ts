@@ -117,6 +117,25 @@ describe("linkConverter", () => {
       expect(result).toBe("/index.html");
     });
 
+    // 共通ページ関連
+    it("新規ページへのリンクが正しく変換できるか確認", () => {
+      const href = "./?cmd=new";
+      const result = resolveHrefToAbsolutePath(href, currentFile, archiveBase);
+      expect(result).toBe("/new.html");
+    });
+
+    it("検索ページへのリンクが正しく変換できるか確認", () => {
+      const href = "./?cmd=search";
+      const result = resolveHrefToAbsolutePath(href, currentFile, archiveBase);
+      expect(result).toBe("/search.html");
+    });
+
+    it("RSSへのリンクが正しく変換できるか確認", () => {
+      const href = "./?cmd=rss";
+      const result = resolveHrefToAbsolutePath(href, currentFile, archiveBase);
+      expect(result).toBe("/rss.xml");
+    });
+
     // 記事ページ関連
     it("同階層の記事へのリンクが正しく変換できるか確認", () => {
       const href = "./?SubPage/%E8%A8%98%E4%BA%8B";
@@ -167,6 +186,12 @@ describe("linkConverter", () => {
       const href = "./?cmd=diff&page=TestPage";
       const result = resolveHrefToAbsolutePath(href, currentFile, archiveBase);
       expect(result).toBe("/articles/TestPage/diff.html");
+    });
+
+    it("各記事の履歴ページへのリンクが正しく変換できるか確認", () => {
+      const href = "./?cmd=backup&page=TestPage";
+      const result = resolveHrefToAbsolutePath(href, currentFile, archiveBase);
+      expect(result).toBe("/articles/TestPage/backup.html");
     });
 
     it("各記事の添付ページへのリンクが正しく変換できるか確認", () => {

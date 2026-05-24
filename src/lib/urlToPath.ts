@@ -91,6 +91,11 @@ export function pageNameToOperations(
       label: "差分",
     },
     {
+      url: `?cmd=backup&page=${rawPageName}`,
+      path: `articles/${pageName}/backup.html`,
+      label: "履歴",
+    },
+    {
       url: `?plugin=attach&pcmd=upload&page=${rawPageName}`,
       path: `articles/${pageName}/attach.html`,
       label: "添付",

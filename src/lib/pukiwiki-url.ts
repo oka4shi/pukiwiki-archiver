@@ -14,12 +14,13 @@ export type PukiWikiUrl =
   | { type: "page"; pageName: string; rawPageName: string }
   | {
       type: "cmd";
-      cmd: "edit" | "freeze" | "diff";
+      cmd: "edit" | "freeze" | "diff" | "backup";
       page: string;
     }
   | { type: "cmd"; cmd: "list" | "filelist" }
   | { type: "cmd"; cmd: "attach"; page: string }
   | { type: "cmd"; cmd: "attachlist" }
+  | { type: "cmd"; cmd: "new" | "search" | "rss" }
   | { type: "plugin"; plugin: "related"; page: string }
   | {
       type: "attachment";
@@ -68,11 +69,22 @@ export function parsePukiWikiUrl(href: string): PukiWikiUrl {
     if (cmd === "filelist") {
       return { type: "cmd", cmd: "filelist" };
     }
-    if (cmd === "edit" || cmd === "freeze" || cmd === "diff") {
+    if (
+      cmd === "edit" ||
+      cmd === "freeze" ||
+      cmd === "diff" ||
+      cmd === "backup"
+    ) {
       const page = urlParams.get("page");
       if (page) {
         return { type: "cmd", cmd, page };
       }
+    }
+    if (cmd === "new" || cmd === "search") {
+      return { type: "cmd", cmd };
+    }
+    if (cmd === "rss") {
+      return { type: "cmd", cmd: "rss" };
     }
 
     // plugin=attach

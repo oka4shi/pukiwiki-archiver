@@ -103,12 +103,12 @@ describe("pageNameToOperations", () => {
 
   it("記事の添付ページパスに /articles/ プレフィックスを付ける", () => {
     const ops = pageNameToOperations("TestPage", "TestPage");
-    expect(ops[3].path).toBe("articles/TestPage/attach.html");
+    expect(ops[4].path).toBe("articles/TestPage/attach.html");
   });
 
   it("記事の backlinks ページパスに /articles/ プレフィックスを付ける", () => {
     const ops = pageNameToOperations("TestPage", "TestPage");
-    expect(ops[4].path).toBe("articles/TestPage/backlinks.html");
+    expect(ops[5].path).toBe("articles/TestPage/backlinks.html");
   });
 });
 

@@ -9,7 +9,7 @@ export function parseDirectoryArgs(): {
   outputDir: string;
 } {
   const args = process.argv.slice(2);
-  let inputDir = "./archive";
+  let inputDir = "./dist";
   let outputDir = "./archive";
 
   // --input と --output フラグをサポート

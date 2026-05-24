@@ -90,58 +90,34 @@ describe("articleHrefToPageName", () => {
 });
 
 describe("pageNameToOperations", () => {
-  it("記事の編集ページパスに /articles/ プレフィックスを付ける", () => {
+  it("各操作ページの url と path が正しく生成される", () => {
     const ops = pageNameToOperations("TestPage", "TestPage");
-    expect(ops[0].path).toBe("articles/TestPage/edit.html");
-  });
+    const byLabel = Object.fromEntries(ops.map((op) => [op.label, op]));
 
-  it("記事の凍結ページパスに /articles/ プレフィックスを付ける", () => {
-    const ops = pageNameToOperations("TestPage", "TestPage");
-    expect(ops[1].path).toBe("articles/TestPage/freeze.html");
-  });
-
-  it("記事の凍結解除ページパスに /articles/ プレフィックスを付ける", () => {
-    const ops = pageNameToOperations("TestPage", "TestPage");
-    expect(ops[2].path).toBe("articles/TestPage/unfreeze.html");
-  });
-
-  it("記事の差分ページパスに /articles/ プレフィックスを付ける", () => {
-    const ops = pageNameToOperations("TestPage", "TestPage");
-    expect(ops[3].path).toBe("articles/TestPage/diff.html");
-  });
-
-  it("記事の添付ページパスに /articles/ プレフィックスを付ける", () => {
-    const ops = pageNameToOperations("TestPage", "TestPage");
-    expect(ops[5].path).toBe("articles/TestPage/attach.html");
-  });
-
-  it("記事の複製ページパスに /articles/ プレフィックスを付ける", () => {
-    const ops = pageNameToOperations("TestPage", "TestPage");
-    expect(ops[6].path).toBe("articles/TestPage/template.html");
-  });
-
-  it("記事の名前変更ページパスに /articles/ プレフィックスを付ける", () => {
-    const ops = pageNameToOperations("TestPage", "TestPage");
-    expect(ops[7].path).toBe("articles/TestPage/rename.html");
-  });
-
-  it("記事の backlinks ページパスに /articles/ プレフィックスを付ける", () => {
-    const ops = pageNameToOperations("TestPage", "TestPage");
-    expect(ops[8].path).toBe("articles/TestPage/backlinks.html");
+    expect(byLabel["編集"].path).toBe("articles/TestPage/edit.html");
+    expect(byLabel["凍結"].path).toBe("articles/TestPage/freeze.html");
+    expect(byLabel["凍結解除"].path).toBe("articles/TestPage/unfreeze.html");
+    expect(byLabel["差分"].path).toBe("articles/TestPage/diff.html");
+    expect(byLabel["履歴"].path).toBe("articles/TestPage/backup.html");
+    expect(byLabel["添付"].path).toBe("articles/TestPage/attach.html");
+    expect(byLabel["複製"].path).toBe("articles/TestPage/template.html");
+    expect(byLabel["名前変更"].path).toBe("articles/TestPage/rename.html");
+    expect(byLabel.Backlinks.path).toBe("articles/TestPage/backlinks.html");
   });
 
   it("FrontPageの操作ページパスに /articles/FrontPage プレフィックスを付ける", () => {
     const ops = pageNameToOperations("FrontPage", "FrontPage");
-    // FrontPageも通常の記事と同じ方法で操作ページを生成される
-    expect(ops[0].path).toBe("articles/FrontPage/edit.html");
-    expect(ops[1].path).toBe("articles/FrontPage/freeze.html");
-    expect(ops[2].path).toBe("articles/FrontPage/unfreeze.html");
-    expect(ops[3].path).toBe("articles/FrontPage/diff.html");
-    expect(ops[4].path).toBe("articles/FrontPage/backup.html");
-    expect(ops[5].path).toBe("articles/FrontPage/attach.html");
-    expect(ops[6].path).toBe("articles/FrontPage/template.html");
-    expect(ops[7].path).toBe("articles/FrontPage/rename.html");
-    expect(ops[8].path).toBe("articles/FrontPage/backlinks.html");
+    const byLabel = Object.fromEntries(ops.map((op) => [op.label, op]));
+
+    expect(byLabel["編集"].path).toBe("articles/FrontPage/edit.html");
+    expect(byLabel["凍結"].path).toBe("articles/FrontPage/freeze.html");
+    expect(byLabel["凍結解除"].path).toBe("articles/FrontPage/unfreeze.html");
+    expect(byLabel["差分"].path).toBe("articles/FrontPage/diff.html");
+    expect(byLabel["履歴"].path).toBe("articles/FrontPage/backup.html");
+    expect(byLabel["添付"].path).toBe("articles/FrontPage/attach.html");
+    expect(byLabel["複製"].path).toBe("articles/FrontPage/template.html");
+    expect(byLabel["名前変更"].path).toBe("articles/FrontPage/rename.html");
+    expect(byLabel.Backlinks.path).toBe("articles/FrontPage/backlinks.html");
   });
 });
 

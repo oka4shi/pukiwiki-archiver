@@ -124,10 +124,12 @@ export function parsePukiWikiUrl(href: string): PukiWikiUrl {
         const decodedPageName = decodeURIComponent(
           queryPart.replace(/\+/g, " "),
         );
+        // rawPageNameを正規化：+ を %20 に変換
+        const normalizedRawPageName = queryPart.replace(/\+/g, "%20");
         return {
           type: "page",
           pageName: decodedPageName,
-          rawPageName: queryPart,
+          rawPageName: normalizedRawPageName,
         };
       } catch {
         return { type: "invalid" };

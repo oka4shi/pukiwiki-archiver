@@ -73,6 +73,82 @@ export function resolveHrefToAbsolutePath(
     return href;
   }
 
+  // ./?で始まるPukiWiki URLの解析
+  if (href.startsWith("./?")) {
+    const queryPart = href.substring(3); // "./?" を削除
+
+    // URLパラメータをパース
+    const urlParams = new URLSearchParams(queryPart);
+
+    // cmd パラメータの処理
+    const cmd = urlParams.get("cmd");
+    if (cmd === "list") {
+      return "/list.html";
+    }
+    if (cmd === "filelist") {
+      return "/filelist.html";
+    }
+    if (cmd) {
+      // cmd=edit&page=TestPage -> /articles/TestPage/edit.html
+      // cmd=freeze&page=TestPage -> /articles/TestPage/freeze.html
+      // cmd=diff&page=TestPage -> /articles/TestPage/diff.html
+      const page = urlParams.get("page");
+      if (page) {
+        return `/articles/${page}/${cmd}.html`;
+      }
+    }
+
+    // plugin パラメータの処理
+    const plugin = urlParams.get("plugin");
+    if (plugin === "attach") {
+      const pcmd = urlParams.get("pcmd");
+      const file = urlParams.get("file");
+      const refer = urlParams.get("refer");
+      const age = urlParams.get("age") ?? "0";
+
+      if (pcmd === "list") {
+        return "/attachlist.html";
+      }
+
+      if (pcmd === "open" && file && refer) {
+        // ./?plugin=attach&pcmd=open&file=file.jpg&refer=TestPage
+        // -> /attachments/TestPage/_attachments/0/file.jpg
+        return `/attachments/${refer}/_attachments/${age}/${file}`;
+      }
+
+      if (pcmd === "info" && file && refer) {
+        // ./?plugin=attach&pcmd=info&file=file.jpg&refer=TestPage
+        // -> /attachments/TestPage/_info/0/file.jpg/index.html
+        return `/attachments/${refer}/_info/${age}/${file}/index.html`;
+      }
+
+      if (pcmd === "upload") {
+        const page = urlParams.get("page");
+        if (page) {
+          return `/articles/${page}/attach.html`;
+        }
+      }
+    }
+
+    if (plugin === "related") {
+      const page = urlParams.get("page");
+      if (page) {
+        return `/articles/${page}/backlinks.html`;
+      }
+    }
+
+    // ページ参照（ページ名のみ）
+    if (queryPart && !urlParams.has("cmd") && !urlParams.has("plugin")) {
+      // 特殊ページの処理
+      if (queryPart === "RecentChanges") {
+        return `/RecentChanges/index.html`;
+      }
+      // 通常の記事
+      // ./?SubPage/ArticleName -> /articles/SubPage/ArticleName/
+      return `/articles/${queryPart}/`;
+    }
+  }
+
   // 現在のファイルの親ディレクトリを基点にした相対パスを解決
   const currentDir = path.dirname(currentFileAbsolutePath);
   const absolutePath = path.resolve(currentDir, href);

@@ -55,7 +55,16 @@ bun run convert:absolute --input /path/to/input --output /path/to/output
 - ページの一覧: `https://wiki.example.com/?cmd=list` -> `/list.html`
 - ページファイルの一覧: `https://wiki.example.com/?cmd=filelist` -> `/filelist.html`
 - 全ページの添付ファイル一覧: `https://wiki.example.com/?plugin=attach&pcmd=list` -> `/attachlist.html`
+
+### 共通ページ
+
+以下のURLのページが取得される。保存されるURLは、以下のルールに従って変換される。
+
+- 新規: `https://wiki.example.com/?cmd=new` -> `/new.html` （なお、リンクの変換時には`&refer=記事名`が付いている場合は無視して`/new.html`に変換する）
+- 検索: `https://wiki.example.com/?cmd=search` -> `/search.html`
 - RecentChanges: `https://wiki.example.com/?RecentChanges` -> `/RecentChanges/index.html`
+- RSS: `https://wiki.example.com/?cmd=rss` -> `/rss.xml`
+- RSS(1.0): `https://wiki.example.com/?cmd=rss&ver=1.0` -> `/rss-1.0.xml`
 
 ### 記事ページ
 
@@ -65,21 +74,18 @@ bun run convert:absolute --input /path/to/input --output /path/to/output
 - 例: `/?すごい記事` -> `/articles/すごい記事/index.html`
 - 例: `/?親記事/サブページ` -> `/articles/親記事/サブページ/index.html`
 
-#### 各記事の操作ページ
+#### 各記事の操作・Backlinksページ
 
-各ページのナビゲーション(`div#navigator`)にあるそれぞれの名前のリンク先のページが取得される。
+各ページの記事名を用いて、以下のURLのページが取得される。
 保存するファイル名は、以下のルールに従って変換される。
 
 - 編集: `/?cmd=edit&page=記事名` -> `/articles/記事名/edit.html`
 - 凍結: `/?cmd=freeze&page=記事名` -> `/articles/記事名/freeze.html`
 - 差分: `/?cmd=diff&page=記事名` -> `/articles/記事名/diff.html`
+- 履歴: `/?cmd=backup&page=記事名` -> `/articles/記事名/backup.html`
 - 添付: `/?plugin=attach&pcmd=upload&page=記事名` -> `/articles/記事名/attach.html`
 
-#### 各記事のBacklinksページ
-
-各ページのヘッダーにある最後のリンク(`div#header > h1.title > a:last-child`)の先のページが取得される。保存されるURLは、以下のルールに従って変換される。
-
-- `/?plugin=related&page=記事名` -> `/articles/記事名/backlinks.html`
+- Backlinks: `/?plugin=related&page=記事名` -> `/articles/記事名/backlinks.html`
 
 ### 添付ファイル
 

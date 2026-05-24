@@ -66,6 +66,11 @@ bun run convert:absolute --input /path/to/input --output /path/to/output
 - RSS: `https://wiki.example.com/?cmd=rss` -> `/rss.xml`
 - RSS(1.0): `https://wiki.example.com/?cmd=rss&ver=1.0` -> `/rss-1.0.xml`
 
+#### アセットなど
+
+- `https://wiki.example.com/skin/{pukiwiki.css,main.js}` -> `/skin/{pukiwiki.css,main.js}`
+- `https://wiki.example.com/image/{pukiwiki.png, edit.png, file.png, file.png, file.png, file.png, top.png, edit.png, freeze.png, diff.png, backup.png, file.png, copy.png, rename.png, reload.png, new.png, list.png, search.png, recentchanges.png, help.png, rss.png}` -> `/image/{pukiwiki.png, edit.png, file.png, file.png, file.png, file.png, top.png, edit.png, freeze.png, diff.png, backup.png, file.png, copy.png, rename.png, reload.png, new.png, list.png, search.png, recentchanges.png, help.png, rss.png}`
+
 ### 記事ページ
 
 「ページの一覧」(`https://wiki.example.com/?cmd=list`)にある記事リンク（`div#contents > div#body > ul > li > ul > li > a`）の先のページが取得される。保存される記事のURLは、以下のルールに従って変換される。

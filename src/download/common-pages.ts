@@ -4,6 +4,26 @@ import { createDownloader } from "../lib/downloader";
 
 type Fetcher = ReturnType<typeof createFetcher>;
 
+const SKIN_FILES = ["pukiwiki.css", "main.js"];
+const IMAGE_FILES = [
+  "pukiwiki.png",
+  "edit.png",
+  "file.png",
+  "top.png",
+  "freeze.png",
+  "diff.png",
+  "backup.png",
+  "copy.png",
+  "rename.png",
+  "reload.png",
+  "new.png",
+  "list.png",
+  "search.png",
+  "recentchanges.png",
+  "help.png",
+  "rss.png",
+];
+
 export async function downloadCommonPages(
   fetcher: Fetcher,
   delayMs: number,
@@ -21,6 +41,19 @@ export async function downloadCommonPages(
   for (const { url, path, label } of pages) {
     console.log(`\n  [${label}]`);
     await dl.saveHtml(url, path);
+  }
+
+  // アセットをダウンロード
+  console.log("\n  [アセット]");
+
+  // Download skin files
+  for (const file of SKIN_FILES) {
+    await dl.saveFile(`skin/${file}`, `skin/${file}`);
+  }
+
+  // Download image files
+  for (const file of IMAGE_FILES) {
+    await dl.saveFile(`image/${file}`, `image/${file}`);
   }
 }
 

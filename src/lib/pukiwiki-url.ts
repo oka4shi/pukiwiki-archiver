@@ -20,7 +20,7 @@ export type PukiWikiUrl =
   | { type: "cmd"; cmd: "list" | "filelist" }
   | { type: "cmd"; cmd: "attach"; page: string }
   | { type: "cmd"; cmd: "attachlist" }
-  | { type: "cmd"; cmd: "new" | "search" | "rss" }
+  | { type: "cmd"; cmd: "newpage" | "search" | "rss" }
   | { type: "plugin"; plugin: "related"; page: string }
   | {
       type: "attachment";
@@ -80,7 +80,7 @@ export function parsePukiWikiUrl(href: string): PukiWikiUrl {
         return { type: "cmd", cmd, page };
       }
     }
-    if (cmd === "new" || cmd === "search") {
+    if (cmd === "newpage" || cmd === "search") {
       return { type: "cmd", cmd };
     }
     if (cmd === "rss") {
@@ -122,6 +122,11 @@ export function parsePukiWikiUrl(href: string): PukiWikiUrl {
       if (page) {
         return { type: "plugin", plugin: "related", page };
       }
+    }
+
+    // plugin=newpage (refer パラメータは無視して cmd: "newpage" として扱う)
+    if (urlParams.get("plugin") === "newpage") {
+      return { type: "cmd", cmd: "newpage" };
     }
 
     // ページ名のみ（パラメータがない場合）

@@ -119,9 +119,15 @@ describe("linkConverter", () => {
 
     // 共通ページ関連
     it("新規ページへのリンクが正しく変換できるか確認", () => {
-      const href = "./?cmd=new";
+      const href = "./?cmd=newpage";
       const result = resolveHrefToAbsolutePath(href, currentFile, archiveBase);
-      expect(result).toBe("/new.html");
+      expect(result).toBe("/newpage.html");
+    });
+
+    it("新規ページへのリンク(refer付き)が正しく変換できるか確認", () => {
+      const href = "./?plugin=newpage&refer=PageName";
+      const result = resolveHrefToAbsolutePath(href, currentFile, archiveBase);
+      expect(result).toBe("/newpage.html");
     });
 
     it("検索ページへのリンクが正しく変換できるか確認", () => {

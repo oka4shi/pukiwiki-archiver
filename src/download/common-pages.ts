@@ -12,7 +12,7 @@ export async function downloadCommonPages(
   const dl = createDownloader(fetcher, OUTPUT_DIR, delayMs);
 
   const pages = [
-    { url: "?cmd=new", path: "new.html", label: "新規" },
+    { url: "?cmd=newpage", path: "newpage.html", label: "新規" },
     { url: "?cmd=search", path: "search.html", label: "検索" },
     { url: "?cmd=rss", path: "rss.xml", label: "RSS" },
     { url: "?cmd=rss&ver=1.0", path: "rss-1.0.xml", label: "RSS(1.0)" },

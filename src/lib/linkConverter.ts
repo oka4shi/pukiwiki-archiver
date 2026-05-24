@@ -45,8 +45,8 @@ export function resolveHrefToAbsolutePath(
       if (pukiUrl.cmd === "attachlist") {
         return "/attachlist.html";
       }
-      if (pukiUrl.cmd === "new") {
-        return "/new.html";
+      if (pukiUrl.cmd === "newpage") {
+        return "/newpage.html";
       }
       if (pukiUrl.cmd === "search") {
         return "/search.html";

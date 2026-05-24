@@ -6,8 +6,8 @@ import {
 } from "./urlToPath";
 
 describe("articleHrefToPageName", () => {
-  it("/ は FrontPage を返す", () => {
-    expect(articleHrefToPageName("/")).toBe("FrontPage");
+  it("./ は FrontPage を返す", () => {
+    expect(articleHrefToPageName("./")).toBe("FrontPage");
   });
 
   it("ASCII ページ名を返す", () => {

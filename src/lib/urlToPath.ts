@@ -1,5 +1,6 @@
 /** PukiWiki が記事リンクに使うプレフィックス。 */
 const ARTICLE_HREF_PREFIX = "./?";
+const FRONTPAGE_HREF_PREFIX = "./";
 
 /** HTML エンティティをデコードする。 */
 function decodeHtmlEntities(text: string): string {
@@ -11,14 +12,13 @@ function decodeHtmlEntities(text: string): string {
     .replace(/&#39;/g, "'");
 }
 /**
- * `./?PageName` または `/` 形式の href からページ名（デコード済み）を取得する。
- * `/` は FrontPage を意味する。
+ * `./?PageName` または `./`(FrontPage) 形式の href からページ名（デコード済み）を取得する。
  * 操作URL（`=` を含む）の場合は null を返す。
  * URLパラメータの + をスペースに変換してから decodeURIComponent を実行する。
  */
 export function articleHrefToPageName(href: string): string | null {
   // FrontPage の場合
-  if (href === "/") {
+  if (href === FRONTPAGE_HREF_PREFIX) {
     return "FrontPage";
   }
 
@@ -33,13 +33,12 @@ export function articleHrefToPageName(href: string): string | null {
 }
 
 /**
- * `./?PageName` または `/` 形式の href から URL エンコード済みのページ名を取得する。
- * `/` は FrontPage を意味する。
+ * `./?PageName` または `./`(FrontPage) 形式の href から URL エンコード済みのページ名を取得する。
  * 操作URL（`=` を含む）の場合は null を返す。
  */
 export function articleHrefToRawPageName(href: string): string | null {
   // FrontPage の場合
-  if (href === "/") {
+  if (href === FRONTPAGE_HREF_PREFIX) {
     return "FrontPage";
   }
 

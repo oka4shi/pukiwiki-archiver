@@ -138,6 +138,12 @@ describe("linkConverter", () => {
       expect(result).toContain("/articles/SubPage2/SuperArticle/");
     });
 
+    it("スペースを含む記事へのリンクが正しく変換できるか確認", () => {
+      const href = "./?SubPage/Article+With+Spaces";
+      const result = resolveHrefToAbsolutePath(href, currentFile, archiveBase);
+      expect(result).toContain("/articles/SubPage/Article%20With%20Spaces/");
+    });
+
     // 各記事の操作・Backlinksページ関連
     it("各記事の編集ページへのリンクが正しく変換できるか確認", () => {
       const href = "./?cmd=edit&page=TestPage";

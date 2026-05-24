@@ -181,6 +181,19 @@ describe("linkConverter", () => {
       expect(result).toBe("/articles/TestPage/backlinks.html");
     });
 
+    // FrontPage の操作ページ
+    it("FrontPageの編集ページへのリンクが正しく変換できるか確認", () => {
+      const href = "./?cmd=edit&page=FrontPage";
+      const result = resolveHrefToAbsolutePath(href, currentFile, archiveBase);
+      expect(result).toBe("/articles/FrontPage/edit.html");
+    });
+
+    it("FrontPageのBacklinksページへのリンクが正しく変換できるか確認", () => {
+      const href = "./?plugin=related&page=FrontPage";
+      const result = resolveHrefToAbsolutePath(href, currentFile, archiveBase);
+      expect(result).toBe("/articles/FrontPage/backlinks.html");
+    });
+
     // 添付ファイル関連
     it("添付ファイルのURLが正しく変換されるか確認", () => {
       const href = "./?plugin=attach&pcmd=open&file=file.jpg&refer=TestPage";

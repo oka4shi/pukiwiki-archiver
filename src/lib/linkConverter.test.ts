@@ -1,12 +1,7 @@
-import { describe, expect, it, beforeEach, afterEach } from "bun:test";
-import * as fs from "fs";
-import * as path from "path";
-import * as os from "os";
+import { describe, expect, it } from "bun:test";
 import {
   resolveHrefToRelativePath,
   resolveHrefToAbsolutePath,
-  convertLinksToRelativePath,
-  convertLinksToAbsolutePath,
 } from "./linkConverter.ts";
 
 describe("linkConverter", () => {
@@ -113,7 +108,9 @@ describe("linkConverter", () => {
     it("一個深い階層の記事へのリンクが正しく変換できるか確認", () => {
       const href = "./?SubPage/SubSubPage/%E8%A8%98%E4%BA%8B";
       const result = resolveHrefToRelativePath(href, currentFile, archiveBase);
-      expect(result).toContain("/articles/SubPage/SubSubPage/%E8%A8%98%E4%BA%8B/");
+      expect(result).toContain(
+        "/articles/SubPage/SubSubPage/%E8%A8%98%E4%BA%8B/",
+      );
     });
 
     it("一個浅い階層の記事へのリンクが正しく変換できるか確認", () => {
@@ -162,8 +159,7 @@ describe("linkConverter", () => {
 
   // 添付ファイル関連
   it("添付ファイルのURLが正しく変換されるか確認", () => {
-    const href =
-      "./?plugin=attach&pcmd=open&file=file.jpg&refer=TestPage";
+    const href = "./?plugin=attach&pcmd=open&file=file.jpg&refer=TestPage";
     const result = resolveHrefToAbsolutePath(href, "", "");
     expect(result).toBe("/attachments/TestPage/_attachments/0/file.jpg");
   });

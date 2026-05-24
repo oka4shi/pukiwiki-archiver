@@ -5,9 +5,9 @@
   "private": true,
   "scripts": {
     "download": "bun run src/download.ts",
-    "download:list": "bun run src/download/list.ts",
+    "download:common": "bun run --sequential src/download/list.ts src/download/common-pages.ts",
     "download:articles": "bun run src/download/articles.ts",
-    "download:attachments": "bun run src/download/attachments.ts src/download/attachments-infos.ts",
+    "download:attachments": "bun run --sequential src/download/attachments.ts src/download/attachments-infos.ts",
     "convert:relative": "bun run src/convert/to-relative.ts",
     "convert:absolute": "bun run src/convert/to-absolute.ts",
     "fix": "run-s --continue-on-error format lint:tsc lint:eslint",

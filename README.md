@@ -60,7 +60,7 @@ bun run convert:absolute --input /path/to/input --output /path/to/output
 
 以下のURLのページが取得される。保存されるURLは、以下のルールに従って変換される。
 
-- 新規: `https://wiki.example.com/?cmd=new` -> `/new.html` （なお、リンクの変換時には`&refer=記事名`が付いている場合は無視して`/new.html`に変換する）
+- 新規: `https://wiki.example.com/?cmd=newpage` -> `/newpage.html` （なお、リンクの変換時には`&refer=記事名`が付いている場合は無視して`/newpage.html`に変換する）
 - 検索: `https://wiki.example.com/?cmd=search` -> `/search.html`
 - RecentChanges: `https://wiki.example.com/?RecentChanges` -> `/RecentChanges/index.html`
 - RSS: `https://wiki.example.com/?cmd=rss` -> `/rss.xml`

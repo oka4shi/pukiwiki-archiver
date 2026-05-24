@@ -1,7 +1,9 @@
 import { configs } from "./config";
 import { createFetcher } from "./lib/fetch";
-import { downloadListPages } from "./download/list";
-import { downloadCommonPages } from "./download/common-pages";
+import {
+  downloadListPages,
+  downloadCommonPages,
+} from "./download/common-pages";
 import { downloadArticles } from "./download/articles";
 import { downloadAttachments } from "./download/attachments";
 import { downloadAttachmentInfos } from "./download/attachment-infos";

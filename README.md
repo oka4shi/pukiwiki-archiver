@@ -48,7 +48,9 @@ bun run convert:absolute --input /path/to/input --output /path/to/output
 
 以下では、アーカイブ対象が `https://wiki.example.com/` だと仮定する。
 
-### リストページ
+### 共通ページ
+
+#### リストページ
 
 以下のURLのページが取得される。保存されるURLは、以下のルールに従って変換される。
 
@@ -56,7 +58,7 @@ bun run convert:absolute --input /path/to/input --output /path/to/output
 - ページファイルの一覧: `https://wiki.example.com/?cmd=filelist` -> `/filelist.html`
 - 全ページの添付ファイル一覧: `https://wiki.example.com/?plugin=attach&pcmd=list` -> `/attachlist.html`
 
-### 共通ページ
+#### 共通ページ
 
 以下のURLのページが取得される。保存されるURLは、以下のルールに従って変換される。
 

@@ -89,6 +89,7 @@ bun run convert:absolute --input /path/to/input --output /path/to/output
 
 - 編集: `/?cmd=edit&page=記事名` -> `/articles/記事名/edit.html`
 - 凍結: `/?cmd=freeze&page=記事名` -> `/articles/記事名/freeze.html`
+- 凍結解除: `/?cmd=unfreeze&page=記事名` -> `/articles/記事名/unfreeze.html`
 - 差分: `/?cmd=diff&page=記事名` -> `/articles/記事名/diff.html`
 - 履歴: `/?cmd=backup&page=記事名` -> `/articles/記事名/backup.html`
 - 添付: `/?plugin=attach&pcmd=upload&page=記事名` -> `/articles/記事名/attach.html`

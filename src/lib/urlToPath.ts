@@ -97,6 +97,11 @@ export function pageNameToOperations(
       label: "凍結",
     },
     {
+      url: `?cmd=unfreeze&page=${rawPageName}`,
+      path: `articles/${pageName}/unfreeze.html`,
+      label: "凍結解除",
+    },
+    {
       url: `?cmd=diff&page=${rawPageName}`,
       path: `articles/${pageName}/diff.html`,
       label: "差分",

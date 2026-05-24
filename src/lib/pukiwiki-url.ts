@@ -14,7 +14,7 @@ export type PukiWikiUrl =
   | { type: "page"; pageName: string; rawPageName: string }
   | {
       type: "cmd";
-      cmd: "edit" | "freeze" | "diff" | "backup";
+      cmd: "edit" | "freeze" | "unfreeze" | "diff" | "backup";
       page: string;
     }
   | { type: "cmd"; cmd: "list" | "filelist" | "backup-index" }
@@ -76,6 +76,7 @@ export function parsePukiWikiUrl(href: string): PukiWikiUrl {
     if (
       cmd === "edit" ||
       cmd === "freeze" ||
+      cmd === "unfreeze" ||
       cmd === "diff" ||
       cmd === "backup"
     ) {

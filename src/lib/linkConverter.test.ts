@@ -207,6 +207,12 @@ describe("linkConverter", () => {
       expect(result).toBe("/articles/TestPage/freeze.html");
     });
 
+    it("各記事の凍結解除ページへのリンクが正しく変換できるか確認", () => {
+      const href = "./?cmd=unfreeze&page=TestPage";
+      const result = resolveHrefToAbsolutePath(href, currentFile, archiveBase);
+      expect(result).toBe("/articles/TestPage/unfreeze.html");
+    });
+
     it("各記事の差分ページへのリンクが正しく変換できるか確認", () => {
       const href = "./?cmd=diff&page=TestPage";
       const result = resolveHrefToAbsolutePath(href, currentFile, archiveBase);

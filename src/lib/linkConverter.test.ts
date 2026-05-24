@@ -101,13 +101,13 @@ describe("linkConverter", () => {
     // 記事ページ関連
     it("同階層の記事へのリンクが正しく変換できるか確認", () => {
       const href = "./?SubPage/%E8%A8%98%E4%BA%8B";
-      const result = resolveHrefToRelativePath(href, currentFile, archiveBase);
+      const result = resolveHrefToAbsolutePath(href, currentFile, archiveBase);
       expect(result).toBe("/articles/SubPage/%E8%A8%98%E4%BA%8B/");
     });
 
     it("一個深い階層の記事へのリンクが正しく変換できるか確認", () => {
       const href = "./?SubPage/SubSubPage/%E8%A8%98%E4%BA%8B";
-      const result = resolveHrefToRelativePath(href, currentFile, archiveBase);
+      const result = resolveHrefToAbsolutePath(href, currentFile, archiveBase);
       expect(result).toContain(
         "/articles/SubPage/SubSubPage/%E8%A8%98%E4%BA%8B/",
       );
@@ -115,13 +115,13 @@ describe("linkConverter", () => {
 
     it("一個浅い階層の記事へのリンクが正しく変換できるか確認", () => {
       const href = "./?%E8%A8%98%E4%BA%8B";
-      const result = resolveHrefToRelativePath(href, currentFile, archiveBase);
+      const result = resolveHrefToAbsolutePath(href, currentFile, archiveBase);
       expect(result).toContain("/articles/%E8%A8%98%E4%BA%8B/");
     });
 
     it("同階層（別サブページ）の記事へのリンクが正しく変換できるか確認", () => {
       const href = "./?SubPage2/SuperArticle";
-      const result = resolveHrefToRelativePath(href, currentFile, archiveBase);
+      const result = resolveHrefToAbsolutePath(href, currentFile, archiveBase);
       expect(result).toContain("/articles/SubPage2/SuperArticle/");
     });
 

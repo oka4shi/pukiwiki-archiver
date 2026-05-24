@@ -96,6 +96,39 @@ export function parsePukiWikiUrl(href: string): PukiWikiUrl {
       return { type: "cmd", cmd: "rss" };
     }
 
+    // plugin=attach (openfile パラメータ形式)
+    if (
+      urlParams.get("plugin") === "attach" &&
+      urlParams.get("openfile") !== null
+    ) {
+      const openfile = urlParams.get("openfile");
+      const refer = urlParams.get("refer");
+      if (openfile && refer) {
+        return {
+          type: "attachment",
+          pcmd: "open",
+          file: openfile,
+          refer,
+          age: "0",
+        };
+      }
+    }
+
+    // plugin=ref
+    if (urlParams.get("plugin") === "ref") {
+      const page = urlParams.get("page");
+      const src = urlParams.get("src");
+      if (page && src) {
+        return {
+          type: "attachment",
+          pcmd: "open",
+          file: src,
+          refer: page,
+          age: "0",
+        };
+      }
+    }
+
     // plugin=attach
     if (urlParams.get("plugin") === "attach") {
       const pcmd = urlParams.get("pcmd");

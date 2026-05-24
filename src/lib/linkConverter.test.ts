@@ -276,6 +276,18 @@ describe("linkConverter", () => {
       expect(result).toBe("/attachments/TestPage/_attachments/2/file.jpg");
     });
 
+    it("openfile形式の添付ファイルURLが正しく変換されるか確認", () => {
+      const href = "./?plugin=attach&refer=TestPage&openfile=file.jpg";
+      const result = resolveHrefToAbsolutePath(href, currentFile, archiveBase);
+      expect(result).toBe("/attachments/TestPage/_attachments/0/file.jpg");
+    });
+
+    it("plugin=ref形式の添付ファイルURLが正しく変換されるか確認", () => {
+      const href = "./?plugin=ref&page=TestPage&src=file.jpg";
+      const result = resolveHrefToAbsolutePath(href, currentFile, archiveBase);
+      expect(result).toBe("/attachments/TestPage/_attachments/0/file.jpg");
+    });
+
     // 添付ファイル詳細ページ関連
     it("添付ファイル詳細ページのURLが正しく変換されるか確認", () => {
       const href = "./?plugin=attach&pcmd=info&file=file.jpg&refer=TestPage";

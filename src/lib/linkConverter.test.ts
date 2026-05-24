@@ -155,33 +155,33 @@ describe("linkConverter", () => {
       const result = resolveHrefToAbsolutePath(href, currentFile, archiveBase);
       expect(result).toBe("/articles/TestPage/backlinks.html");
     });
-  });
 
-  // 添付ファイル関連
-  it("添付ファイルのURLが正しく変換されるか確認", () => {
-    const href = "./?plugin=attach&pcmd=open&file=file.jpg&refer=TestPage";
-    const result = resolveHrefToAbsolutePath(href, "", "");
-    expect(result).toBe("/attachments/TestPage/_attachments/0/file.jpg");
-  });
+    // 添付ファイル関連
+    it("添付ファイルのURLが正しく変換されるか確認", () => {
+      const href = "./?plugin=attach&pcmd=open&file=file.jpg&refer=TestPage";
+      const result = resolveHrefToAbsolutePath(href, currentFile, archiveBase);
+      expect(result).toBe("/attachments/TestPage/_attachments/0/file.jpg");
+    });
 
-  it("添付ファイルのURL(世代入り)が正しく変換されるか確認", () => {
-    const href =
-      "./?plugin=attach&pcmd=open&file=file.jpg&refer=TestPage&age=2";
-    const result = resolveHrefToAbsolutePath(href, "", "");
-    expect(result).toBe("/attachments/TestPage/_attachments/2/file.jpg");
-  });
+    it("添付ファイルのURL(世代入り)が正しく変換されるか確認", () => {
+      const href =
+        "./?plugin=attach&pcmd=open&file=file.jpg&refer=TestPage&age=2";
+      const result = resolveHrefToAbsolutePath(href, currentFile, archiveBase);
+      expect(result).toBe("/attachments/TestPage/_attachments/2/file.jpg");
+    });
 
-  // 添付ファイル詳細ページ関連
-  it("添付ファイル詳細ページのURLが正しく変換されるか確認", () => {
-    const href = "./?plugin=attach&pcmd=info&file=file.jpg&refer=TestPage";
-    const result = resolveHrefToAbsolutePath(href, "", "");
-    expect(result).toBe("/attachments/TestPage/_info/0/file.jpg/index.html");
-  });
+    // 添付ファイル詳細ページ関連
+    it("添付ファイル詳細ページのURLが正しく変換されるか確認", () => {
+      const href = "./?plugin=attach&pcmd=info&file=file.jpg&refer=TestPage";
+      const result = resolveHrefToAbsolutePath(href, currentFile, archiveBase);
+      expect(result).toBe("/attachments/TestPage/_info/0/file.jpg/index.html");
+    });
 
-  it("添付ファイル詳細ページのURL(世代入り)が正しく変換されるか確認", () => {
-    const href =
-      "./?plugin=attach&pcmd=info&file=file.jpg&refer=TestPage&age=3";
-    const result = resolveHrefToAbsolutePath(href, "", "");
-    expect(result).toBe("/attachments/TestPage/_info/3/file.jpg/index.html");
+    it("添付ファイル詳細ページのURL(世代入り)が正しく変換されるか確認", () => {
+      const href =
+        "./?plugin=attach&pcmd=info&file=file.jpg&refer=TestPage&age=3";
+      const result = resolveHrefToAbsolutePath(href, currentFile, archiveBase);
+      expect(result).toBe("/attachments/TestPage/_info/3/file.jpg/index.html");
+    });
   });
 });

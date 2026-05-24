@@ -92,6 +92,9 @@ bun run convert:absolute --input /path/to/input --output /path/to/output
 - 履歴: `/?cmd=backup&page=記事名` -> `/articles/記事名/backup.html`
 - 添付: `/?plugin=attach&pcmd=upload&page=記事名` -> `/articles/記事名/attach.html`
 
+- 複製: `?plugin=template&refer=記事名` -> `/articles/記事名/template.html`
+- 名前変更: `?plugin=rename&refer=記事名` -> `/articles/記事名/rename.html`
+
 - Backlinks: `/?plugin=related&page=記事名` -> `/articles/記事名/backlinks.html`
 
 ### 添付ファイル

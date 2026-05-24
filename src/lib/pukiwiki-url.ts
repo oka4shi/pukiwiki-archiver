@@ -22,6 +22,7 @@ export type PukiWikiUrl =
   | { type: "cmd"; cmd: "attachlist" }
   | { type: "cmd"; cmd: "newpage" | "search" | "rss" }
   | { type: "plugin"; plugin: "related"; page: string }
+  | { type: "plugin"; plugin: "template" | "rename"; refer: string }
   | {
       type: "attachment";
       pcmd: "open" | "info";
@@ -121,6 +122,22 @@ export function parsePukiWikiUrl(href: string): PukiWikiUrl {
       const page = urlParams.get("page");
       if (page) {
         return { type: "plugin", plugin: "related", page };
+      }
+    }
+
+    // plugin=template
+    if (urlParams.get("plugin") === "template") {
+      const refer = urlParams.get("refer");
+      if (refer) {
+        return { type: "plugin", plugin: "template", refer };
+      }
+    }
+
+    // plugin=rename
+    if (urlParams.get("plugin") === "rename") {
+      const refer = urlParams.get("refer");
+      if (refer) {
+        return { type: "plugin", plugin: "rename", refer };
       }
     }
 

@@ -81,9 +81,11 @@ export function resolveHrefToAbsolutePath(
     }
 
     case "plugin": {
-      // plugin must be "related" here based on type definition
-      const page = pukiUrl.page;
-      return `/articles/${page}/backlinks.html`;
+      if (pukiUrl.plugin === "related") {
+        return `/articles/${pukiUrl.page}/backlinks.html`;
+      }
+      // template or rename
+      return `/articles/${pukiUrl.refer}/${pukiUrl.plugin}.html`;
     }
 
     case "invalid":

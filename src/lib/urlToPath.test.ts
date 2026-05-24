@@ -110,9 +110,19 @@ describe("pageNameToOperations", () => {
     expect(ops[4].path).toBe("articles/TestPage/attach.html");
   });
 
+  it("記事の複製ページパスに /articles/ プレフィックスを付ける", () => {
+    const ops = pageNameToOperations("TestPage", "TestPage");
+    expect(ops[5].path).toBe("articles/TestPage/template.html");
+  });
+
+  it("記事の名前変更ページパスに /articles/ プレフィックスを付ける", () => {
+    const ops = pageNameToOperations("TestPage", "TestPage");
+    expect(ops[6].path).toBe("articles/TestPage/rename.html");
+  });
+
   it("記事の backlinks ページパスに /articles/ プレフィックスを付ける", () => {
     const ops = pageNameToOperations("TestPage", "TestPage");
-    expect(ops[5].path).toBe("articles/TestPage/backlinks.html");
+    expect(ops[7].path).toBe("articles/TestPage/backlinks.html");
   });
 
   it("FrontPageの操作ページパスに /articles/FrontPage プレフィックスを付ける", () => {
@@ -123,7 +133,9 @@ describe("pageNameToOperations", () => {
     expect(ops[2].path).toBe("articles/FrontPage/diff.html");
     expect(ops[3].path).toBe("articles/FrontPage/backup.html");
     expect(ops[4].path).toBe("articles/FrontPage/attach.html");
-    expect(ops[5].path).toBe("articles/FrontPage/backlinks.html");
+    expect(ops[5].path).toBe("articles/FrontPage/template.html");
+    expect(ops[6].path).toBe("articles/FrontPage/rename.html");
+    expect(ops[7].path).toBe("articles/FrontPage/backlinks.html");
   });
 });
 

@@ -112,6 +112,16 @@ export function pageNameToOperations(
       label: "添付",
     },
     {
+      url: `?plugin=template&refer=${rawPageName}`,
+      path: `articles/${pageName}/template.html`,
+      label: "複製",
+    },
+    {
+      url: `?plugin=rename&refer=${rawPageName}`,
+      path: `articles/${pageName}/rename.html`,
+      label: "名前変更",
+    },
+    {
       url: `?plugin=related&page=${rawPageName}`,
       path: `articles/${pageName}/backlinks.html`,
       label: "Backlinks",

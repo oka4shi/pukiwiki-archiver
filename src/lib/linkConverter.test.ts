@@ -225,6 +225,18 @@ describe("linkConverter", () => {
       expect(result).toBe("/articles/TestPage/backlinks.html");
     });
 
+    it("各記事の複製ページへのリンクが正しく変換できるか確認", () => {
+      const href = "./?plugin=template&refer=TestPage";
+      const result = resolveHrefToAbsolutePath(href, currentFile, archiveBase);
+      expect(result).toBe("/articles/TestPage/template.html");
+    });
+
+    it("各記事の名前変更ページへのリンクが正しく変換できるか確認", () => {
+      const href = "./?plugin=rename&refer=TestPage";
+      const result = resolveHrefToAbsolutePath(href, currentFile, archiveBase);
+      expect(result).toBe("/articles/TestPage/rename.html");
+    });
+
     // FrontPage の操作ページ
     it("FrontPageの編集ページへのリンクが正しく変換できるか確認", () => {
       const href = "./?cmd=edit&page=FrontPage";

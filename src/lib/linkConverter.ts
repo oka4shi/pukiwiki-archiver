@@ -1,50 +1,5 @@
 import * as path from "path";
-
-/**
- * ダウンロード済みのHTML内のリンクを相対パスに変換する
- */
-
-/**
- * 現在のHTMLファイルのパスから、指定されたhrefが指す実際のファイルパスを計算する
- * @param href - HTMLに書かれているhref
- * @param currentFileAbsolutePath - 現在のHTMLファイルの絶対パス
- * @param archiveBaseAbsolutePath - アーカイブのルートディレクトリの絶対パス
- * @returns 相対URL（相対パス変換モード）、または絶対URL。外部URLの場合はそのまま返す
- */
-export function resolveHrefToRelativePath(
-  href: string,
-  currentFileAbsolutePath: string,
-  archiveBaseAbsolutePath: string,
-): string {
-  // 外部URL、スキーム付きURLをスキップ
-  if (href.startsWith("http://") || href.startsWith("https://")) {
-    return href;
-  }
-
-  // アンカーリンクのみの場合はそのまま返す
-  if (href.startsWith("#")) {
-    return href;
-  }
-
-  // プロトコル相対URLをスキップ
-  if (href.startsWith("//")) {
-    return href;
-  }
-
-  // 現在のファイルの親ディレクトリを基点にした相対パスを解決
-  const currentDir = path.dirname(currentFileAbsolutePath);
-  const absolutePath = path.resolve(currentDir, href);
-
-  // archiveBaseAbsolutePath の外のパスへのリンクは変換しない
-  if (!absolutePath.startsWith(archiveBaseAbsolutePath)) {
-    return href;
-  }
-
-  // currentDir からの相対パスに変換
-  const relativePath = path.relative(currentDir, absolutePath);
-
-  return relativePath;
-}
+import { parsePukiWikiUrl } from "./pukiwiki-url.ts";
 
 /**
  * 現在のHTMLファイルのパスから、指定されたhrefが指す実際のファイルパスを計算する
@@ -73,94 +28,60 @@ export function resolveHrefToAbsolutePath(
     return href;
   }
 
-  // ./（トップページ）の場合
-  if (href === "./") {
-    return "/";
-  }
+  // PukiWiki URLをパース
+  const pukiUrl = parsePukiWikiUrl(href);
 
-  // ./?で始まるPukiWiki URLの解析
-  if (href.startsWith("./?")) {
-    const queryPart = href.substring(3); // "./?" を削除
+  switch (pukiUrl.type) {
+    case "root":
+      return "/";
 
-    // URLパラメータをパース
-    const urlParams = new URLSearchParams(queryPart);
-
-    // cmd パラメータの処理
-    const cmd = urlParams.get("cmd");
-    if (cmd === "list") {
-      return "/list.html";
-    }
-    if (cmd === "filelist") {
-      return "/filelist.html";
-    }
-    if (cmd) {
-      // cmd=edit&page=TestPage -> /articles/TestPage/edit.html
-      // cmd=freeze&page=TestPage -> /articles/TestPage/freeze.html
-      // cmd=diff&page=TestPage -> /articles/TestPage/diff.html
-      const page = urlParams.get("page");
-      if (page) {
-        return `/articles/${page}/${cmd}.html`;
+    case "cmd": {
+      if (pukiUrl.cmd === "list") {
+        return "/list.html";
       }
-    }
-
-    // plugin パラメータの処理
-    const plugin = urlParams.get("plugin");
-    if (plugin === "attach") {
-      const pcmd = urlParams.get("pcmd");
-      const file = urlParams.get("file");
-      const refer = urlParams.get("refer");
-      const age = urlParams.get("age") ?? "0";
-
-      if (pcmd === "list") {
+      if (pukiUrl.cmd === "filelist") {
+        return "/filelist.html";
+      }
+      if (pukiUrl.cmd === "attachlist") {
         return "/attachlist.html";
       }
+      // edit, freeze, diff, attach
+      const page = "page" in pukiUrl ? pukiUrl.page : "";
+      return `/articles/${page}/${pukiUrl.cmd}.html`;
+    }
 
-      if (pcmd === "open" && file && refer) {
-        // ./?plugin=attach&pcmd=open&file=file.jpg&refer=TestPage
-        // -> /attachments/TestPage/_attachments/0/file.jpg
+    case "page":
+      return `/articles/${pukiUrl.rawPageName}/`;
+
+    case "special-page":
+      if (pukiUrl.pageName === "RecentChanges") {
+        return "/RecentChanges/index.html";
+      }
+      return `/articles/${pukiUrl.pageName}/`;
+
+    case "attachment": {
+      const { pcmd, file, refer, age } = pukiUrl;
+      if (pcmd === "open") {
         return `/attachments/${refer}/_attachments/${age}/${file}`;
       }
-
-      if (pcmd === "info" && file && refer) {
-        // ./?plugin=attach&pcmd=info&file=file.jpg&refer=TestPage
-        // -> /attachments/TestPage/_info/0/file.jpg/index.html
-        return `/attachments/${refer}/_info/${age}/${file}/index.html`;
-      }
-
-      if (pcmd === "upload") {
-        const page = urlParams.get("page");
-        if (page) {
-          return `/articles/${page}/attach.html`;
-        }
-      }
+      // pcmd === "info"
+      return `/attachments/${refer}/_info/${age}/${file}/index.html`;
     }
 
-    if (plugin === "related") {
-      const page = urlParams.get("page");
-      if (page) {
-        return `/articles/${page}/backlinks.html`;
-      }
+    case "plugin": {
+      // plugin must be "related" here based on type definition
+      const page = pukiUrl.page;
+      return `/articles/${page}/backlinks.html`;
     }
 
-    // ページ参照（ページ名のみ）
-    if (queryPart && !urlParams.has("cmd") && !urlParams.has("plugin")) {
-      // 特殊ページの処理
-      if (queryPart === "RecentChanges") {
-        return `/RecentChanges/index.html`;
+    case "invalid":
+      // ./?から始まらない ./ で始まるもの（./invalid など）は変換しない
+      if (href.startsWith("./") && !href.startsWith("./?") && href !== "./") {
+        return href;
       }
-      // 通常の記事
-      // ./?SubPage/ArticleName -> /articles/SubPage/ArticleName/
-      return `/articles/${queryPart}/`;
-    }
-  }
-
-  // ./?から始まらない ./ で始まるもの（./invalid など）は変換しない
-  if (href.startsWith("./") && !href.startsWith("./?") && href !== "./") {
-    return href;
   }
 
   // 必須パラメータが空の場合は相対パスを解決しない
-  // （パラメータが渡されていないケースを避ける）
   if (!currentFileAbsolutePath || !archiveBaseAbsolutePath) {
     return href;
   }
@@ -178,8 +99,61 @@ export function resolveHrefToAbsolutePath(
 }
 
 /**
- * HTMLRewriter を使ってHTMLのリンク属性を変換するハンドラー（相対パス変換）
+ * 現在のHTMLファイルのパスから、指定されたhrefが指す実際のファイルパスを計算する
+ * @param href - HTMLに書かれているhref
+ * @param currentFileAbsolutePath - 現在のHTMLファイルの絶対パス
+ * @param archiveBaseAbsolutePath - アーカイブのルートディレクトリの絶対パス
+ * @returns 相対パス。外部URLの場合はそのまま返す
  */
+export function resolveHrefToRelativePath(
+  href: string,
+  currentFileAbsolutePath: string,
+  archiveBaseAbsolutePath: string,
+): string {
+  // 外部URL、スキーム付きURLをスキップ
+  if (href.startsWith("http://") || href.startsWith("https://")) {
+    return href;
+  }
+
+  // アンカーリンクのみの場合はそのまま返す
+  if (href.startsWith("#")) {
+    return href;
+  }
+
+  // プロトコル相対URLをスキップ
+  if (href.startsWith("//")) {
+    return href;
+  }
+
+  // PukiWiki URLをパース
+  const pukiUrl = parsePukiWikiUrl(href);
+
+  // PukiWiki形式以外のURLはそのまま返す（変換しない）
+  if (pukiUrl.type === "invalid" && !href.startsWith("./")) {
+    return href;
+  }
+
+  // PukiWiki URLを絶対パスに変換してから、相対パスを計算
+  const absolutePath = resolveHrefToAbsolutePath(
+    href,
+    currentFileAbsolutePath,
+    archiveBaseAbsolutePath,
+  );
+
+  // 外部URLや相対URLはそのまま返す
+  if (!absolutePath.startsWith("/")) {
+    return absolutePath;
+  }
+
+  // 絶対パスから相対パスに変換
+  const currentDir = path.dirname(currentFileAbsolutePath);
+  const archivePath = archiveBaseAbsolutePath + absolutePath;
+
+  // 相対パスに変換
+  const relativePath = path.relative(currentDir, archivePath);
+
+  return relativePath;
+}
 class RelativePathLinkRewriter {
   constructor(
     private currentFileAbsolutePath: string,
@@ -229,6 +203,11 @@ class AbsolutePathLinkRewriter {
         this.currentFileAbsolutePath,
         this.archiveBaseAbsolutePath,
       );
+      if (resolvedHref.startsWith(this.archiveBaseAbsolutePath)) {
+        console.warn(
+          `Warning: Resolved absolute path "${resolvedHref}" is within the archive base directory. This may indicate an issue with the path resolution logic.`,
+        );
+      }
       element.setAttribute("href", resolvedHref);
     }
 

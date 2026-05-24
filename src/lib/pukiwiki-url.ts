@@ -119,6 +119,10 @@ export function parsePukiWikiUrl(href: string): PukiWikiUrl {
         return { type: "special-page", pageName: "RecentChanges" };
       }
 
+      if (queryPart === "FrontPage") {
+        return { type: "special-page", pageName: "FrontPage" };
+      }
+
       // 通常の記事ページ
       try {
         const decodedPageName = decodeURIComponent(

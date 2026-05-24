@@ -57,6 +57,9 @@ export function resolveHrefToAbsolutePath(
       if (pukiUrl.pageName === "RecentChanges") {
         return "/RecentChanges/index.html";
       }
+      if (pukiUrl.pageName === "FrontPage") {
+        return "/index.html";
+      }
       return `/articles/${pukiUrl.pageName}/`;
 
     case "attachment": {

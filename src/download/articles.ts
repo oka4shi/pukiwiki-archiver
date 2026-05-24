@@ -28,7 +28,11 @@ export async function downloadArticles(
     const rawPageName = articleHrefToRawPageName(href);
     if (!rawPageName) continue;
 
-    await dl.saveHtml(href, `articles/${pageName}/index.html`);
+    // FrontPage は特殊ページ：ルートに保存
+    const savePath =
+      pageName === "FrontPage" ? "index.html" : `articles/${pageName}/index.html`;
+
+    await dl.saveHtml(href, savePath);
     for (const { url, path } of pageNameToOperations(pageName, rawPageName)) {
       await dl.saveHtml(url, path);
     }

@@ -119,3 +119,15 @@ bun run convert:absolute --input /path/to/input --output /path/to/output
 
 - `/?plugin=attach&pcmd=info&file=ファイル名&refer=記事名` -> `/attachments/記事名/_info/0/ファイル名/index.html`
 - `/?plugin=attach&pcmd=info&file=ファイル名&refer=記事名&age=世代` -> `/attachments/記事名/_info/世代/ファイル名/index.html`
+
+## TODO
+
+大体動くと思いますが、以下への対策がまだです。
+
+- 各プラグインページへの対応（例えば?plugin=mapなど）
+- calendar2対応（静的では再現できないのでダミーページに差し替え？）
+- `./InterWikiName`ページにある`./?cmd=add`などへのリンクの対応
+- ?cmd=filelistからもページのURLを取得する（「ページの一覧」ページには:から始まるページはリストアップされない）
+- `./`から始まらないパスを変換しないようにする(`mailto:`、`ftp:`などへの対処)
+- 相対パスへの変換の動作確認
+- （ツールチェーン周りをBiomeにする）

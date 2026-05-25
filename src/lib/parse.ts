@@ -1,10 +1,12 @@
+import { decodeHtmlEntities } from "./pukiwiki-url.ts";
+
 /** `?cmd=list` のHTMLから記事 href 一覧を取得する。 */
 export async function parseArticleHrefs(html: string): Promise<string[]> {
   const hrefs: string[] = [];
   const rewriter = new HTMLRewriter().on("div#body ul > li > ul > li > a", {
     element(el) {
       const href = el.getAttribute("href");
-      if (href) hrefs.push(href);
+      if (href) hrefs.push(decodeHtmlEntities(href));
     },
   });
   await rewriter.transform(new Response(html)).arrayBuffer();
@@ -22,7 +24,7 @@ export async function parseAttachmentOpenHrefs(
       element(el) {
         const href = el.getAttribute("href");
         if (href) {
-          hrefs.push(href);
+          hrefs.push(decodeHtmlEntities(href));
         }
       },
     },
@@ -42,7 +44,7 @@ export async function parseAttachmentInfoHrefs(
       element(el) {
         const href = el.getAttribute("href");
         if (href) {
-          hrefs.push(href);
+          hrefs.push(decodeHtmlEntities(href));
         }
       },
     },

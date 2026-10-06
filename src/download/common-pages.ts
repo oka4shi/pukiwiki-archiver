@@ -1,12 +1,12 @@
 import { configs, OUTPUT_DIR } from "../config";
-import { createFetcher } from "../lib/fetch";
 import { createDownloader } from "../lib/downloader";
-import { saveContent } from "../lib/save";
+import { createFetcher } from "../lib/fetch";
 import {
   parseArticleHrefs,
-  parseAttachmentOpenHrefs,
   parseAttachmentInfoHrefs,
+  parseAttachmentOpenHrefs,
 } from "../lib/parse";
+import { saveContent } from "../lib/save";
 
 type Fetcher = ReturnType<typeof createFetcher>;
 

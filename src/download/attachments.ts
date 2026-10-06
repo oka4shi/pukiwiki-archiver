@@ -1,6 +1,6 @@
 import { configs, OUTPUT_DIR } from "../config";
-import { createFetcher } from "../lib/fetch";
 import { createDownloader } from "../lib/downloader";
+import { createFetcher } from "../lib/fetch";
 import { parseAttachmentOpenHrefs } from "../lib/parse";
 import { attachmentHrefToPath } from "../lib/urlToPath";
 

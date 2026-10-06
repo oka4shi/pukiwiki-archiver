@@ -130,4 +130,3 @@ bun run convert:absolute --input /path/to/input --output /path/to/output
 - ?cmd=filelistからもページのURLを取得する（「ページの一覧」ページには:から始まるページはリストアップされない）
 - `./`から始まらないパスを変換しないようにする(`mailto:`、`ftp:`などへの対処)
 - 相対パスへの変換の動作確認
-- （ツールチェーン周りをBiomeにする）

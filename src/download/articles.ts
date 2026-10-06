@@ -1,6 +1,6 @@
 import { configs, OUTPUT_DIR } from "../config";
-import { createFetcher } from "../lib/fetch";
 import { createDownloader } from "../lib/downloader";
+import { createFetcher } from "../lib/fetch";
 import { parseArticleHrefs } from "../lib/parse";
 import {
   articleHrefToPageName,

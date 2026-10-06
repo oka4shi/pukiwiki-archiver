@@ -1,10 +1,10 @@
 import { convertLinksToAbsolutePath } from "../lib/linkConverter.ts";
 import {
-  parseDirectoryArgs,
-  validateAndCreateDirectories,
   cleanDirectory,
   copyDirectory,
+  parseDirectoryArgs,
   processHtmlDirectory,
+  validateAndCreateDirectories,
 } from "./shared.ts";
 
 async function main() {

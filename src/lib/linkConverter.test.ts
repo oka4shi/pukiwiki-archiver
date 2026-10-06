@@ -1,7 +1,7 @@
 import { describe, expect, it } from "bun:test";
 import {
-  resolveHrefToRelativePath,
   resolveHrefToAbsolutePath,
+  resolveHrefToRelativePath,
 } from "./linkConverter.ts";
 
 describe("linkConverter", () => {

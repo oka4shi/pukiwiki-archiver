@@ -1,5 +1,5 @@
-import type { Fetcher } from "./fetch";
 import { sleep } from "./delay";
+import type { Fetcher } from "./fetch";
 import { saveContent } from "./save";
 
 /**

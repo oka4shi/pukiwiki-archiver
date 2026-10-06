@@ -1,12 +1,12 @@
 import { configs } from "./config";
-import { createFetcher } from "./lib/fetch";
-import {
-  downloadListPages,
-  downloadCommonPages,
-} from "./download/common-pages";
 import { downloadArticles } from "./download/articles";
-import { downloadAttachments } from "./download/attachments";
 import { downloadAttachmentInfos } from "./download/attachment-infos";
+import { downloadAttachments } from "./download/attachments";
+import {
+  downloadCommonPages,
+  downloadListPages,
+} from "./download/common-pages";
+import { createFetcher } from "./lib/fetch";
 
 const { baseUrl } = configs;
 if (!baseUrl) {
